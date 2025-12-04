@@ -1,0 +1,942 @@
+/**
+ * Theme Name: HRGMS Theme
+ * Theme URI: https://hrgms.com.my
+ * Description: Theme khas untuk portal harga emas Malaysia - HargaEmas.my. Design modern dengan Bootstrap 5.
+ * Version: 1.0.0
+ * Author: Shahrul
+ * Author URI: https://hrgms.com.my
+ * Text Domain: hrgms-theme
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Tags: gold-price, malaysia, bootstrap, responsive, custom-logo
+ */
+
+/* ==========================================================================
+   CSS Variables / Design Tokens - HargaEmas Theme Colors
+   ========================================================================== */
+:root {
+    /* Navigation */
+    --hrgms-nav-bg: #e95420;
+    --hrgms-nav-text: #ffffff;
+    
+    /* Body */
+    --hrgms-body-bg: #ecf2f7;
+    
+    /* Cards */
+    --hrgms-card-bg: #ffffff;
+    --hrgms-card-text: #2d3748;
+    --hrgms-card-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
+    --hrgms-card-border: #e2e8f0;
+    
+    /* Footer */
+    --hrgms-footer-bg: #1e2939;
+    --hrgms-footer-text: #cccccc;
+    
+    /* Buttons */
+    --hrgms-btn-primary: #77ac68;
+    --hrgms-btn-secondary: #f45928;
+    --hrgms-btn-dark: #282828;
+    --hrgms-btn-text: #ffffff;
+    
+    /* Legacy mappings for compatibility */
+    --hrgms-primary: #e95420;
+    --hrgms-primary-dark: #d44810;
+    --hrgms-primary-light: #f45928;
+    --hrgms-secondary: #2d3748;
+    --hrgms-success: #77ac68;
+    --hrgms-danger: #e74c3c;
+    --hrgms-white: #ffffff;
+    --hrgms-light: #ecf2f7;
+    --hrgms-gray: #6c757d;
+    --hrgms-dark: #1e2939;
+    
+    /* Typography */
+    --hrgms-font-primary: 'Poppins', sans-serif;
+    --hrgms-font-size-base: 1rem;
+    
+    /* Spacing */
+    --hrgms-section-padding: 60px 0;
+    
+    /* Shadows */
+    --hrgms-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
+    --hrgms-shadow-lg: 0 4px 6px -1px rgba(0,0,0,.1);
+    
+    /* Border Radius */
+    --hrgms-radius: 8px;
+    --hrgms-radius-lg: 12px;
+}
+
+/* ==========================================================================
+   Base Styles
+   ========================================================================== */
+body {
+    font-family: var(--hrgms-font-primary);
+    color: var(--hrgms-card-text);
+    background-color: var(--hrgms-body-bg);
+    line-height: 1.6;
+}
+
+a {
+    color: var(--hrgms-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--hrgms-primary-dark);
+}
+
+/* ==========================================================================
+   Header & Navigation
+   ========================================================================== */
+.hrgms-header {
+    background: var(--hrgms-nav-bg);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--hrgms-shadow);
+}
+
+.hrgms-navbar {
+    padding: 12px 0;
+}
+
+.hrgms-logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--hrgms-white) !important;
+    letter-spacing: 1px;
+}
+
+.hrgms-nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    border-radius: var(--hrgms-radius);
+    transition: all 0.3s ease;
+}
+
+.hrgms-nav-link:hover,
+.hrgms-nav-link.active {
+    color: var(--hrgms-white) !important;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Mobile Toggle */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ==========================================================================
+   Hero Section - Background Image with Blur Overlay
+   ========================================================================== */
+.hrgms-hero {
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+    background-color: #1e2939;
+}
+
+/* Hero with background image - Blur Effect */
+.hrgms-hero-bg {
+    position: relative;
+    background: #1e2939; /* Fallback color */
+}
+
+.hrgms-hero-bg::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-image: url('https://www.hargaemas.my/images/hero/hero-bg.webp');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    z-index: 1;
+}
+
+.hrgms-hero-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Dark overlay untuk darken image */
+    background: linear-gradient(
+        135deg, 
+        rgba(30, 41, 57, 0.75) 0%, 
+        rgba(20, 30, 45, 0.85) 100%
+    );
+    z-index: 2;
+}
+
+.hrgms-hero-bg .container {
+    position: relative;
+    z-index: 10;
+}
+
+.hrgms-hero-bg .hrgms-hero-content,
+.hrgms-hero-bg .hrgms-hero-image {
+    position: relative;
+    z-index: 10;
+}
+
+.hrgms-hero-bg .row {
+    position: relative;
+    z-index: 10;
+}
+
+/* Hero without background image (for inner pages) */
+.hrgms-hero-simple {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1e2939 100%);
+}
+
+.hrgms-hero-light {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: var(--hrgms-card-text);
+}
+
+.hrgms-hero-light .hrgms-hero-title {
+    color: var(--hrgms-card-text);
+}
+
+.hrgms-hero-light .hrgms-hero-subtitle {
+    color: var(--hrgms-gray);
+}
+
+/* Note: .hrgms-hero::before is used by .hrgms-hero-bg for background image */
+
+.hrgms-hero-content {
+    position: relative;
+    z-index: 10;
+}
+
+.hrgms-hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--hrgms-white);
+    margin-bottom: 1rem;
+}
+
+.hrgms-hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+}
+
+.hrgms-hero-image {
+    position: relative;
+    z-index: 10;
+}
+
+.hrgms-hero-image img {
+    max-width: 100%;
+    border-radius: var(--hrgms-radius-lg);
+    box-shadow: var(--hrgms-shadow-lg);
+}
+
+/* Hero Buttons */
+.btn-hero-primary {
+    background: var(--hrgms-white);
+    color: var(--hrgms-primary);
+    padding: 12px 28px;
+    font-weight: 600;
+    border-radius: var(--hrgms-radius);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-hero-primary:hover {
+    background: var(--hrgms-light);
+    color: var(--hrgms-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--hrgms-shadow);
+}
+
+.btn-hero-secondary {
+    background: transparent;
+    color: var(--hrgms-white);
+    padding: 12px 28px;
+    font-weight: 600;
+    border-radius: var(--hrgms-radius);
+    border: 2px solid var(--hrgms-white);
+    transition: all 0.3s ease;
+}
+
+.btn-hero-secondary:hover {
+    background: var(--hrgms-white);
+    color: var(--hrgms-primary);
+}
+
+/* ==========================================================================
+   Spot Prices Section
+   ========================================================================== */
+.hrgms-spot-prices {
+    padding: var(--hrgms-section-padding);
+    background: var(--hrgms-card-bg);
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--hrgms-secondary);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.price-card {
+    background: var(--hrgms-card-bg);
+    border: 1px solid var(--hrgms-card-border);
+    border-radius: var(--hrgms-radius);
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: var(--hrgms-card-shadow);
+}
+
+.price-card:hover {
+    box-shadow: var(--hrgms-shadow-lg);
+    transform: translateY(-3px);
+}
+
+.price-card-label {
+    font-size: 0.9rem;
+    color: var(--hrgms-gray);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.price-card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--hrgms-primary);
+    margin-bottom: 8px;
+}
+
+.price-card-change {
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.price-card-change.up {
+    color: var(--hrgms-success);
+}
+
+.price-card-change.down {
+    color: var(--hrgms-danger);
+}
+
+.price-timestamp {
+    text-align: center;
+    color: var(--hrgms-gray);
+    font-size: 0.85rem;
+    margin-top: 1.5rem;
+}
+
+/* ==========================================================================
+   Stats Section
+   ========================================================================== */
+.hrgms-stats {
+    padding: 40px 0;
+    background: var(--hrgms-light);
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 20px;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--hrgms-primary);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    color: var(--hrgms-gray);
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   Product Grid Section
+   ========================================================================== */
+.hrgms-products {
+    padding: var(--hrgms-section-padding);
+    background: var(--hrgms-card-bg);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--hrgms-card-text);
+    margin: 0;
+}
+
+.view-all-link {
+    color: var(--hrgms-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.view-all-link:hover {
+    color: var(--hrgms-primary-dark);
+    text-decoration: underline;
+}
+
+/* Product Card */
+.product-card {
+    background: var(--hrgms-card-bg);
+    border: 1px solid var(--hrgms-card-border);
+    border-radius: var(--hrgms-radius-lg);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    box-shadow: var(--hrgms-card-shadow);
+}
+
+.product-card:hover {
+    box-shadow: var(--hrgms-shadow-lg);
+    transform: translateY(-3px);
+}
+
+.product-image {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    background: var(--hrgms-light);
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.product-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--hrgms-danger);
+    color: var(--hrgms-white);
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+}
+
+.product-badge.discount {
+    background: var(--hrgms-danger);
+}
+
+.product-body {
+    padding: 15px;
+}
+
+.product-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--hrgms-card-text);
+    margin-bottom: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-title a {
+    color: inherit;
+}
+
+.product-title a:hover {
+    color: var(--hrgms-primary);
+}
+
+.product-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--hrgms-primary);
+    margin-bottom: 5px;
+}
+
+.product-price-old {
+    font-size: 0.85rem;
+    color: var(--hrgms-gray);
+    text-decoration: line-through;
+    margin-left: 8px;
+}
+
+.product-meta {
+    font-size: 0.8rem;
+    color: var(--hrgms-gray);
+    margin-bottom: 10px;
+}
+
+.btn-product {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid var(--hrgms-btn-secondary);
+    color: var(--hrgms-btn-secondary);
+    background: transparent;
+    border-radius: var(--hrgms-radius);
+    transition: all 0.3s ease;
+}
+
+.btn-product:hover {
+    background: var(--hrgms-btn-secondary);
+    color: var(--hrgms-btn-text);
+}
+
+/* Button Variants */
+.btn-hrgms-primary {
+    background: var(--hrgms-btn-primary);
+    color: var(--hrgms-btn-text);
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--hrgms-radius);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-hrgms-primary:hover {
+    background: #6a9a5d;
+    color: var(--hrgms-btn-text);
+}
+
+.btn-hrgms-secondary {
+    background: var(--hrgms-btn-secondary);
+    color: var(--hrgms-btn-text);
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--hrgms-radius);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-hrgms-secondary:hover {
+    background: #d44810;
+    color: var(--hrgms-btn-text);
+}
+
+.btn-hrgms-dark {
+    background: var(--hrgms-btn-dark);
+    color: var(--hrgms-btn-text);
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--hrgms-radius);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-hrgms-dark:hover {
+    background: #1a1a1a;
+    color: var(--hrgms-btn-text);
+}
+
+/* ==========================================================================
+   Shop Listings Section
+   ========================================================================== */
+.hrgms-shops {
+    padding: var(--hrgms-section-padding);
+    background: var(--hrgms-light);
+}
+
+.shop-card {
+    background: var(--hrgms-card-bg);
+    border: 1px solid var(--hrgms-card-border);
+    border-radius: var(--hrgms-radius-lg);
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+    box-shadow: var(--hrgms-card-shadow);
+}
+
+.shop-card:hover {
+    box-shadow: var(--hrgms-shadow-lg);
+}
+
+.shop-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid var(--hrgms-light);
+}
+
+.shop-badge {
+    display: inline-block;
+    background: var(--hrgms-success);
+    color: var(--hrgms-white);
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.shop-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--hrgms-secondary);
+    margin-bottom: 5px;
+}
+
+.shop-location {
+    font-size: 0.85rem;
+    color: var(--hrgms-gray);
+}
+
+/* ==========================================================================
+   Ar-Rahnu Comparison Table
+   ========================================================================== */
+.hrgms-arrahnu {
+    padding: var(--hrgms-section-padding);
+    background: var(--hrgms-card-bg);
+}
+
+.arrahnu-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--hrgms-card-bg);
+    border-radius: var(--hrgms-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--hrgms-card-shadow);
+    border: 1px solid var(--hrgms-card-border);
+}
+
+.arrahnu-table thead {
+    background: var(--hrgms-light);
+}
+
+.arrahnu-table th {
+    padding: 15px;
+    font-weight: 600;
+    color: var(--hrgms-secondary);
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.arrahnu-table td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+.arrahnu-table tbody tr:hover {
+    background: var(--hrgms-light);
+}
+
+.arrahnu-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.btn-visit {
+    color: var(--hrgms-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.btn-visit:hover {
+    color: var(--hrgms-primary-dark);
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Why Choose Us Section
+   ========================================================================== */
+.hrgms-why-us {
+    padding: var(--hrgms-section-padding);
+    background: var(--hrgms-light);
+}
+
+.why-us-card {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.why-us-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--hrgms-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: var(--hrgms-white);
+    font-size: 1.75rem;
+}
+
+.why-us-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--hrgms-secondary);
+    margin-bottom: 10px;
+}
+
+.why-us-desc {
+    font-size: 0.9rem;
+    color: var(--hrgms-gray);
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   Investment Guide Section
+   ========================================================================== */
+.hrgms-guide {
+    padding: var(--hrgms-section-padding);
+    background: var(--hrgms-card-bg);
+}
+
+.guide-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--hrgms-secondary);
+    margin-bottom: 1rem;
+}
+
+.guide-content {
+    color: var(--hrgms-gray);
+    line-height: 1.8;
+}
+
+.guide-content ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.guide-content li {
+    margin-bottom: 0.5rem;
+}
+
+/* ==========================================================================
+   CTA Section
+   ========================================================================== */
+.hrgms-cta {
+    padding: 60px 0;
+    background: linear-gradient(135deg, #1e3a5f 0%, #1e2939 100%);
+    text-align: center;
+}
+
+.cta-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--hrgms-white);
+    margin-bottom: 1rem;
+}
+
+.cta-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-cta-primary {
+    background: var(--hrgms-btn-primary);
+    color: var(--hrgms-btn-text);
+    padding: 14px 32px;
+    font-weight: 600;
+    border-radius: var(--hrgms-radius);
+    border: none;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-cta-primary:hover {
+    background: #6a9a5d;
+    color: var(--hrgms-btn-text);
+    transform: translateY(-2px);
+}
+
+.btn-cta-secondary {
+    background: transparent;
+    color: var(--hrgms-btn-text);
+    padding: 14px 32px;
+    font-weight: 600;
+    border-radius: var(--hrgms-radius);
+    border: 2px solid var(--hrgms-btn-text);
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-cta-secondary:hover {
+    background: var(--hrgms-btn-text);
+    color: var(--hrgms-primary);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.hrgms-footer {
+    background: var(--hrgms-footer-bg);
+    color: var(--hrgms-footer-text);
+    padding: 50px 0 20px;
+}
+
+.footer-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--hrgms-btn-secondary);
+    margin-bottom: 15px;
+}
+
+.footer-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+.footer-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--hrgms-white);
+    margin-bottom: 20px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--hrgms-primary);
+}
+
+.footer-contact p {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.footer-contact i {
+    width: 20px;
+    color: var(--hrgms-primary);
+    margin-right: 10px;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    margin-top: 40px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.footer-disclaimer {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 10px;
+}
+
+/* ==========================================================================
+   Responsive Styles
+   ========================================================================== */
+@media (max-width: 991px) {
+    .hrgms-hero-title {
+        font-size: 2rem;
+    }
+    
+    .hrgms-hero {
+        padding: 40px 0;
+    }
+    
+    .hrgms-hero-image {
+        margin-top: 30px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .hrgms-hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .hrgms-hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .price-card-value {
+        font-size: 1.5rem;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .arrahnu-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .cta-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .price-card {
+        margin-bottom: 15px;
+    }
+    
+    .btn-hero-primary,
+    .btn-hero-secondary {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
