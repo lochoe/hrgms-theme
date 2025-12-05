@@ -129,7 +129,11 @@ get_header();
                                                     <?php if ($child_thumb) : ?>
                                                         <img src="<?php echo esc_url($child_thumb); ?>" alt="<?php echo esc_attr($child->post_title); ?>" class="img-fluid">
                                                     <?php else : ?>
-                                                        <img src="https://via.placeholder.com/300x200/1e3a5f/ffffff?text=<?php echo urlencode(substr($child->post_title, 0, 10)); ?>" alt="" class="img-fluid">
+                                                        <img src="<?php echo hrgms_get_placeholder_image($child->post_title, '1e3a5f', 'ffffff', 300, 200); ?>" 
+                                                             alt="<?php echo esc_attr($child->post_title); ?>" 
+                                                             class="img-fluid"
+                                                             loading="lazy"
+                                                             onerror="this.src='<?php echo hrgms_get_placeholder_image('Image', '1e3a5f', 'ffffff', 300, 200); ?>';">
                                                     <?php endif; ?>
                                                 </a>
                                             </div>

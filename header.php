@@ -17,6 +17,9 @@ if (!defined('ABSPATH')) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
+    <!-- Permissions Policy - Fix for unload warning -->
+    <meta http-equiv="Permissions-Policy" content="unload=*">
+    
     <!-- Theme Color for Mobile Browsers -->
     <meta name="theme-color" content="#e95420">
     <meta name="msapplication-navbutton-color" content="#e95420">

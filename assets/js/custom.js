@@ -131,6 +131,61 @@
         }).format(number);
     };
 
+    /**
+     * Handle image load errors
+     * What: Replace broken images with placeholder
+     * Input: none
+     * Output: void
+     * Side effects: Adds error handlers to images
+     */
+    function initImageErrorHandling() {
+        const images = document.querySelectorAll('img');
+        images.forEach(function(img) {
+            if (!img.hasAttribute('data-error-handled')) {
+                img.setAttribute('data-error-handled', 'true');
+                img.addEventListener('error', function() {
+                    // Only replace if no onerror handler already set
+                    if (!this.onerror || this.onerror.toString().indexOf('placeholder') === -1) {
+                        const width = this.width || 300;
+                        const height = this.height || 200;
+                        const placeholderUrl = 'https://via.placeholder.com/' + width + 'x' + height + '/1e3a5f/ffffff?text=Image';
+                        if (this.src !== placeholderUrl) {
+                            this.src = placeholderUrl;
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    // Initialize image error handling
+    document.addEventListener('DOMContentLoaded', function() {
+        initImageErrorHandling();
+    });
+
+    // Handle dynamically added images
+    const imageObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) {
+                    if (node.tagName === 'IMG') {
+                        initImageErrorHandling();
+                    } else if (node.querySelectorAll) {
+                        const newImages = node.querySelectorAll('img');
+                        if (newImages.length > 0) {
+                            initImageErrorHandling();
+                        }
+                    }
+                }
+            });
+        });
+    });
+
+    imageObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
 })();
 
 

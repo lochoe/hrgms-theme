@@ -62,10 +62,11 @@ get_header();
                                                      class="img-fluid"
                                                      loading="lazy">
                                             <?php else : ?>
-                                                <img src="https://via.placeholder.com/300x200/1e3a5f/ffffff?text=<?php echo urlencode(substr(get_the_title(), 0, 15)); ?>" 
+                                                <img src="<?php echo hrgms_get_placeholder_image(get_the_title(), '1e3a5f', 'ffffff', 300, 200); ?>" 
                                                      alt="<?php the_title_attribute(); ?>" 
                                                      class="img-fluid"
-                                                     loading="lazy">
+                                                     loading="lazy"
+                                                     onerror="this.src='<?php echo hrgms_get_placeholder_image('Image', '1e3a5f', 'ffffff', 300, 200); ?>';">
                                             <?php endif; ?>
                                         </a>
                                         <?php

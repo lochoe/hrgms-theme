@@ -320,6 +320,30 @@ function hrgms_async_scripts($tag, $handle, $src) {
 }
 add_filter('script_loader_tag', 'hrgms_async_scripts', 10, 3);
 
+/**
+ * hrgms_handle_rest_api_errors
+ * What: Add error handling for REST API 422 errors (if from theme)
+ * Input: WP_Error $error, WP_REST_Request $request, string $route
+ * Output: WP_Error (modified)
+ * Side effects: Logs errors for debugging
+ */
+function hrgms_handle_rest_api_errors($error, $request, $route) {
+    // Only log if it's a 422 error and in debug mode
+    if (defined('WP_DEBUG') && WP_DEBUG && is_wp_error($error)) {
+        $error_code = $error->get_error_code();
+        if ($error_code === 'rest_invalid_param' || strpos($route, 'hrgms') !== false) {
+            error_log('HRGMS Theme REST API Error: ' . $error->get_error_message() . ' on route: ' . $route);
+        }
+    }
+    return $error;
+}
+add_filter('rest_pre_dispatch', function($result, $server, $request) {
+    if (is_wp_error($result)) {
+        hrgms_handle_rest_api_errors($result, $request, $request->get_route());
+    }
+    return $result;
+}, 10, 3);
+
 /* ==========================================================================
    CUSTOM REWRITE RULES FOR LISTING PAGES
    ========================================================================== */
@@ -772,4 +796,56 @@ function hrgms_breadcrumb() {
     
     echo '</ol>';
     echo '</nav>';
+}
+
+/**
+ * hrgms_get_placeholder_image
+ * What: Generate safe placeholder image URL with proper validation
+ * Input: string $text - Text to display on placeholder (optional)
+ *        string $bg_color - Background color hex (default: 1e3a5f)
+ *        string $text_color - Text color hex (default: ffffff)
+ *        int $width - Image width (default: 300)
+ *        int $height - Image height (default: 200)
+ * Output: string - Complete placeholder image URL
+ * Side effects: none
+ * Errors: Returns default placeholder if text is empty or invalid
+ */
+function hrgms_get_placeholder_image($text = '', $bg_color = '1e3a5f', $text_color = 'ffffff', $width = 300, $height = 200) {
+    // Validate and sanitize inputs
+    $bg_color = preg_replace('/[^0-9a-fA-F]/', '', $bg_color);
+    $text_color = preg_replace('/[^0-9a-fA-F]/', '', $text_color);
+    $width = absint($width);
+    $height = absint($height);
+    
+    // Default values if invalid
+    if (empty($bg_color)) $bg_color = '1e3a5f';
+    if (empty($text_color)) $text_color = 'ffffff';
+    if ($width < 1) $width = 300;
+    if ($height < 1) $height = 200;
+    
+    // Sanitize text - limit length and ensure it's safe
+    if (empty($text)) {
+        $text = 'Image';
+    } else {
+        $text = sanitize_text_field($text);
+        $text = substr($text, 0, 20); // Limit to 20 chars
+        $text = trim($text);
+        if (empty($text)) {
+            $text = 'Image';
+        }
+    }
+    
+    // Build URL with proper encoding
+    $base_url = 'https://via.placeholder.com';
+    $url = sprintf(
+        '%s/%dx%d/%s/%s?text=%s',
+        $base_url,
+        $width,
+        $height,
+        $bg_color,
+        $text_color,
+        urlencode($text)
+    );
+    
+    return esc_url($url);
 }

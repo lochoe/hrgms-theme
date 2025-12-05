@@ -67,10 +67,11 @@ $total_items = $pages_query->found_posts;
                                              class="img-fluid"
                                              loading="lazy">
                                     <?php else : ?>
-                                        <img src="https://via.placeholder.com/300x200/e95420/ffffff?text=<?php echo urlencode(substr(get_the_title(), 0, 15)); ?>" 
+                                        <img src="<?php echo hrgms_get_placeholder_image(get_the_title(), 'e95420', 'ffffff', 300, 200); ?>" 
                                              alt="<?php the_title_attribute(); ?>" 
                                              class="img-fluid"
-                                             loading="lazy">
+                                             loading="lazy"
+                                             onerror="this.src='<?php echo hrgms_get_placeholder_image('Image', 'e95420', 'ffffff', 300, 200); ?>';">
                                     <?php endif; ?>
                                 </a>
                             </div>
