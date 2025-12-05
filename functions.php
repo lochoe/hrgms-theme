@@ -725,6 +725,57 @@ function hrgms_harga_emas_template_redirect() {
 add_action('template_redirect', 'hrgms_harga_emas_template_redirect');
 
 /**
+ * hrgms_harga_emas_malaysia_template_redirect
+ * What: Load custom template for harga-emas-malaysia page
+ * URL: /harga-emas-malaysia/
+ */
+function hrgms_harga_emas_malaysia_template_redirect() {
+    // Check if this is a page with slug 'harga-emas-malaysia'
+    if (is_page('harga-emas-malaysia')) {
+        $template_path = get_template_directory() . '/template-harga-emas-malaysia.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+    
+    // Also check by request URI as fallback
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    if (strpos($request_uri, '/harga-emas-malaysia') !== false && !is_admin()) {
+        $template_path = get_template_directory() . '/template-harga-emas-malaysia.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'hrgms_harga_emas_malaysia_template_redirect', 1);
+
+/**
+ * hrgms_harga_emas_malaysia_seo_meta
+ * What: Add SEO meta tags for harga-emas-malaysia page
+ */
+function hrgms_harga_emas_malaysia_seo_meta() {
+    if (is_page('harga-emas-malaysia')) {
+        $current_year = date('Y');
+        $current_date = date('d F Y');
+        $description = "Dapatkan harga emas Malaysia terkini hari ini ($current_date). Harga emas 999, 916, 835, 750 per gram. Harga Ar-Rahnu dan maklumat lengkap harga emas di Malaysia.";
+        ?>
+        <meta name="description" content="<?php echo esc_attr($description); ?>">
+        <meta name="keywords" content="harga emas malaysia, harga emas 999, harga emas hari ini, harga emas per gram, harga ar-rahnu, emas malaysia <?php echo $current_year; ?>">
+        <meta property="og:title" content="Harga Emas Malaysia <?php echo $current_year; ?> - Harga Terkini Hari Ini">
+        <meta property="og:description" content="<?php echo esc_attr($description); ?>">
+        <meta property="og:url" content="<?php echo esc_url(home_url('/harga-emas-malaysia/')); ?>">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Harga Emas Malaysia <?php echo $current_year; ?>">
+        <meta name="twitter:description" content="<?php echo esc_attr($description); ?>">
+        <?php
+    }
+}
+add_action('wp_head', 'hrgms_harga_emas_malaysia_seo_meta', 5);
+
+/**
  * hrgms_exclude_harga_emas_from_main_query
  * What: Exclude Harga Emas category from main blog queries
  * This ensures Harga Emas posts don't appear in regular blog listings
@@ -796,6 +847,123 @@ function hrgms_breadcrumb() {
     
     echo '</ol>';
     echo '</nav>';
+}
+
+/* ==========================================================================
+   GOLD PRICES API FUNCTIONS - For harga-emas-malaysia page
+   ========================================================================== */
+
+/**
+ * hrgms_fetch_gold_prices
+ * What: Fetch gold prices from API with caching (5 minutes TTL)
+ * Input: none
+ * Output: array|false - Gold prices data or false on error
+ * Side effects: Updates transient cache
+ * Errors: Returns false on network error or invalid JSON
+ */
+function hrgms_fetch_gold_prices() {
+    $cache_key = 'hrgms_gold_prices';
+    $cache_time = 5 * MINUTE_IN_SECONDS; // 5 minutes cache
+    
+    // Try to get from cache first
+    $cached = get_transient($cache_key);
+    if ($cached !== false) {
+        return $cached;
+    }
+    
+    // Fetch from API
+    $api_url = 'https://www.hargaemas.my/api/gold-prices.json';
+    $response = wp_remote_get($api_url, array(
+        'timeout' => 10,
+        'sslverify' => true,
+    ));
+    
+    // Check for errors
+    if (is_wp_error($response)) {
+        error_log('HRGMS: Failed to fetch gold prices - ' . $response->get_error_message());
+        return false;
+    }
+    
+    $body = wp_remote_retrieve_body($response);
+    $data = json_decode($body, true);
+    
+    // Validate data
+    if (json_last_error() !== JSON_ERROR_NONE || !isset($data['prices'])) {
+        error_log('HRGMS: Invalid JSON response from gold prices API');
+        return false;
+    }
+    
+    // Cache the data
+    set_transient($cache_key, $data, $cache_time);
+    
+    return $data;
+}
+
+/**
+ * hrgms_fetch_ar_rahnu_prices
+ * What: Fetch Ar-Rahnu prices from API with caching (5 minutes TTL)
+ * Input: none
+ * Output: array|false - Ar-Rahnu prices data or false on error
+ * Side effects: Updates transient cache
+ * Errors: Returns false on network error or invalid JSON
+ */
+function hrgms_fetch_ar_rahnu_prices() {
+    $cache_key = 'hrgms_ar_rahnu_prices';
+    $cache_time = 5 * MINUTE_IN_SECONDS; // 5 minutes cache
+    
+    // Try to get from cache first
+    $cached = get_transient($cache_key);
+    if ($cached !== false) {
+        return $cached;
+    }
+    
+    // Fetch from API
+    $api_url = 'https://www.hargaemas.my/api/ar-rahnu.json';
+    $response = wp_remote_get($api_url, array(
+        'timeout' => 10,
+        'sslverify' => true,
+    ));
+    
+    // Check for errors
+    if (is_wp_error($response)) {
+        error_log('HRGMS: Failed to fetch Ar-Rahnu prices - ' . $response->get_error_message());
+        return false;
+    }
+    
+    $body = wp_remote_retrieve_body($response);
+    $data = json_decode($body, true);
+    
+    // Validate data
+    if (json_last_error() !== JSON_ERROR_NONE || !isset($data['arRahnu'])) {
+        error_log('HRGMS: Invalid JSON response from Ar-Rahnu API');
+        return false;
+    }
+    
+    // Cache the data
+    set_transient($cache_key, $data, $cache_time);
+    
+    return $data;
+}
+
+/**
+ * hrgms_format_currency
+ * What: Format number as Malaysian Ringgit
+ * Input: float $amount - Amount to format
+ * Output: string - Formatted currency string
+ */
+function hrgms_format_currency($amount) {
+    return 'RM ' . number_format($amount, 2);
+}
+
+/**
+ * hrgms_format_price_per_gram
+ * What: Format price per gram from price per 100g
+ * Input: float $price_100g - Price per 100g
+ * Output: string - Formatted price per gram
+ */
+function hrgms_format_price_per_gram($price_100g) {
+    $per_gram = $price_100g / 100;
+    return hrgms_format_currency($per_gram);
 }
 
 /**
