@@ -37,7 +37,7 @@ get_header();
         "name": "Berapa harga emas 999 Malaysia hari ini?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Harga emas 999 Malaysia hari ini adalah sekitar <?php echo $gold_prices ? hrgms_format_currency($gold_prices['prices']['MksBuy'] / 100) : 'RM 55-57'; ?> per gram untuk belian dan <?php echo $gold_prices ? hrgms_format_currency($gold_prices['prices']['MksSell'] / 100) : 'RM 56-58'; ?> per gram untuk jualan."
+          "text": "Harga emas 999 Malaysia hari ini adalah sekitar <?php echo $gold_prices ? hrgms_format_price_per_gram($gold_prices['prices']['MksBuy']) : 'RM 55-57'; ?> per gram untuk belian dan <?php echo $gold_prices ? hrgms_format_price_per_gram($gold_prices['prices']['MksSell']) : 'RM 56-58'; ?> per gram untuk jualan."
         }
       },
       {
@@ -94,30 +94,36 @@ get_header();
                 <div class="mt-4">
                     <div class="row justify-content-center g-3">
                         <div class="col-6 col-md-3">
-                            <div class="card" style="background: rgba(255,255,255,0.95); border: 2px solid #f39c12;">
-                                <div class="card-body text-center p-3">
-                                    <small class="text-muted d-block mb-1">Harga Beli 999</small>
-                                    <strong class="text-primary" style="font-size: 1.3rem;">
+                            <div class="card shadow-lg" style="background: linear-gradient(135deg, #f9f3e3 0%, #fef9e7 100%); border: 2px solid #f39c12; border-radius: 12px;">
+                                <div class="card-body text-center p-4">
+                                    <div class="mb-2">
+                                        <i class="bi bi-arrow-down-circle-fill" style="font-size: 2rem; color: #77ac68;"></i>
+                                    </div>
+                                    <small class="text-muted d-block mb-2 fw-bold">Harga Beli 999</small>
+                                    <strong class="d-block" style="font-size: 1.5rem; color: #77ac68; font-weight: 700;">
                                         <?php echo hrgms_format_price_per_gram($gold_prices['prices']['MksBuy']); ?>
                                     </strong>
-                                    <small class="text-muted d-block mt-1">per gram</small>
+                                    <small class="text-muted d-block mt-2">per gram</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-6 col-md-3">
-                            <div class="card" style="background: rgba(255,255,255,0.95); border: 2px solid #e67e22;">
-                                <div class="card-body text-center p-3">
-                                    <small class="text-muted d-block mb-1">Harga Jual 999</small>
-                                    <strong class="text-danger" style="font-size: 1.3rem;">
+                            <div class="card shadow-lg" style="background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%); border: 2px solid #e67e22; border-radius: 12px;">
+                                <div class="card-body text-center p-4">
+                                    <div class="mb-2">
+                                        <i class="bi bi-arrow-up-circle-fill" style="font-size: 2rem; color: #e67e22;"></i>
+                                    </div>
+                                    <small class="text-muted d-block mb-2 fw-bold">Harga Jual 999</small>
+                                    <strong class="d-block" style="font-size: 1.5rem; color: #e67e22; font-weight: 700;">
                                         <?php echo hrgms_format_price_per_gram($gold_prices['prices']['MksSell']); ?>
                                     </strong>
-                                    <small class="text-muted d-block mt-1">per gram</small>
+                                    <small class="text-muted d-block mt-2">per gram</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <?php if (isset($gold_prices['lastUpdate'])) : ?>
-                    <p class="text-white-50 mt-3 small">
+                    <p class="text-white-50 mt-4 small">
                         <i class="bi bi-clock me-1"></i>Dikemaskini: <?php echo date('d M Y, H:i', strtotime($gold_prices['lastUpdate'])); ?>
                     </p>
                     <?php endif; ?>
@@ -129,13 +135,13 @@ get_header();
 </header>
 
 <!-- Main Content Section -->
-<section class="hrgms-products" style="padding: 60px 0;">
+<section class="hrgms-products" style="padding: 60px 0; background: var(--hrgms-body-bg);">
     <div class="container">
         
         <!-- SEO Content Section -->
         <div class="row mb-5">
-            <div class="col-lg-8 mx-auto">
-                <article class="card" style="border: 1px solid var(--hrgms-card-border); box-shadow: var(--hrgms-card-shadow);">
+            <div class="col-lg-10 mx-auto">
+                <article class="card shadow-lg" style="border: none; border-radius: 16px; background: var(--hrgms-card-bg); box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);">
                     <div class="card-body p-4 p-lg-5">
                         
                         <!-- Introduction -->
@@ -151,41 +157,43 @@ get_header();
                         <!-- Current Gold Prices Table -->
                         <?php if ($gold_prices && isset($gold_prices['prices'])) : ?>
                         <div class="mb-5">
-                            <h3 class="h4 mb-3"><i class="bi bi-table me-2"></i>Harga Emas Malaysia Hari Ini</h3>
+                            <h3 class="h4 mb-4" style="color: var(--hrgms-primary);">
+                                <i class="bi bi-graph-up me-2" style="color: #f39c12;"></i>Harga Emas Malaysia Hari Ini
+                            </h3>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover">
-                                    <thead class="table-light">
+                                <table class="table table-bordered table-hover" style="border-radius: 8px; overflow: hidden;">
+                                    <thead style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); color: white;">
                                         <tr>
-                                            <th>Jenis Emas</th>
-                                            <th class="text-end">Harga Beli (RM/gram)</th>
-                                            <th class="text-end">Harga Jual (RM/gram)</th>
+                                            <th style="border: none; padding: 15px;"><i class="bi bi-gem me-2"></i>Jenis Emas</th>
+                                            <th class="text-end" style="border: none; padding: 15px;"><i class="bi bi-arrow-down-circle me-2"></i>Harga Beli (RM/gram)</th>
+                                            <th class="text-end" style="border: none; padding: 15px;"><i class="bi bi-arrow-up-circle me-2"></i>Harga Jual (RM/gram)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><strong>Emas 999 (24K)</strong><br><small class="text-muted">Emas Tulen</small></td>
-                                            <td class="text-end"><strong class="text-primary"><?php echo hrgms_format_price_per_gram($gold_prices['prices']['MksBuy']); ?></strong></td>
-                                            <td class="text-end"><strong class="text-danger"><?php echo hrgms_format_price_per_gram($gold_prices['prices']['MksSell']); ?></strong></td>
+                                        <tr style="background: linear-gradient(135deg, #fef9e7 0%, #f9f3e3 100%);">
+                                            <td style="border-color: #e2e8f0;"><strong>Emas 999 (24K)</strong><br><small class="text-muted">Emas Tulen</small></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><strong style="color: #77ac68; font-size: 1.1rem;"><?php echo hrgms_format_price_per_gram($gold_prices['prices']['MksBuy']); ?></strong></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><strong style="color: #e67e22; font-size: 1.1rem;"><?php echo hrgms_format_price_per_gram($gold_prices['prices']['MksSell']); ?></strong></td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Emas Tael</strong><br><small class="text-muted">37.5 gram</small></td>
-                                            <td class="text-end"><?php echo hrgms_format_currency($gold_prices['prices']['TaelBuy']); ?></td>
-                                            <td class="text-end"><?php echo hrgms_format_currency($gold_prices['prices']['TaelSell']); ?></td>
+                                            <td style="border-color: #e2e8f0;"><strong>Emas Tael</strong><br><small class="text-muted">37.5 gram</small></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><?php echo hrgms_format_currency($gold_prices['prices']['TaelBuy']); ?></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><?php echo hrgms_format_currency($gold_prices['prices']['TaelSell']); ?></td>
                                         </tr>
                                         <?php if (isset($gold_prices['prices']['SilverBuy'])) : ?>
                                         <tr>
-                                            <td><strong>Perak (Silver)</strong></td>
-                                            <td class="text-end"><?php echo hrgms_format_currency($gold_prices['prices']['SilverBuy']); ?></td>
-                                            <td class="text-end"><?php echo hrgms_format_currency($gold_prices['prices']['SilverSell']); ?></td>
+                                            <td style="border-color: #e2e8f0;"><strong>Perak (Silver)</strong></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><?php echo hrgms_format_currency($gold_prices['prices']['SilverBuy']); ?></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><?php echo hrgms_format_currency($gold_prices['prices']['SilverSell']); ?></td>
                                         </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>
-                            <p class="text-muted small mt-2">
-                                <i class="bi bi-info-circle me-1"></i>Harga adalah anggaran dan mungkin berbeza mengikut kedai emas. 
+                            <div class="alert alert-info mt-3" style="background: #e3f2fd; border-left: 4px solid #2196F3; border-radius: 8px;">
+                                <i class="bi bi-info-circle me-2"></i><strong>Nota:</strong> Harga adalah anggaran dan mungkin berbeza mengikut kedai emas. 
                                 Sila hubungi kedai emas berlesen untuk harga terkini.
-                            </p>
+                            </div>
                         </div>
                         <?php endif; ?>
 
@@ -210,23 +218,25 @@ get_header();
                         <!-- Ar-Rahnu Section -->
                         <?php if ($ar_rahnu_prices && isset($ar_rahnu_prices['arRahnu'])) : ?>
                         <div class="mb-5">
-                            <h3 class="h4 mb-3"><i class="bi bi-bank me-2"></i>Harga Ar-Rahnu di Malaysia</h3>
-                            <p>
+                            <h3 class="h4 mb-4" style="color: var(--hrgms-primary);">
+                                <i class="bi bi-bank me-2" style="color: #f39c12;"></i>Harga Ar-Rahnu di Malaysia
+                            </h3>
+                            <p class="mb-4">
                                 <strong>Ar-Rahnu</strong> adalah sistem pajak gadai Islam yang membolehkan anda mendapatkan pinjaman dengan 
                                 menggunakan emas sebagai cagaran. Berikut adalah harga Ar-Rahnu dari pelbagai institusi di Malaysia:
                             </p>
                             
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover">
-                                    <thead class="table-light">
+                                <table class="table table-bordered table-hover" style="border-radius: 8px; overflow: hidden;">
+                                    <thead style="background: linear-gradient(135deg, #1e3a5f 0%, #2d3748 100%); color: white;">
                                         <tr>
-                                            <th>Institusi</th>
-                                            <th class="text-end">750</th>
-                                            <th class="text-end">835</th>
-                                            <th class="text-end">875</th>
-                                            <th class="text-end">916</th>
-                                            <th class="text-end">950</th>
-                                            <th class="text-end">999</th>
+                                            <th style="border: none; padding: 15px;"><i class="bi bi-building me-2"></i>Institusi</th>
+                                            <th class="text-end" style="border: none; padding: 15px;">750</th>
+                                            <th class="text-end" style="border: none; padding: 15px;">835</th>
+                                            <th class="text-end" style="border: none; padding: 15px;">875</th>
+                                            <th class="text-end" style="border: none; padding: 15px;">916</th>
+                                            <th class="text-end" style="border: none; padding: 15px;">950</th>
+                                            <th class="text-end" style="border: none; padding: 15px;"><strong>999</strong></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -234,57 +244,67 @@ get_header();
                                         $ar_rahnu_list = $ar_rahnu_prices['arRahnu'];
                                         // Show top 5 for better UX
                                         $top_ar_rahnu = array_slice($ar_rahnu_list, 0, 5);
+                                        $row_count = 0;
                                         foreach ($top_ar_rahnu as $institution) : 
+                                            $row_count++;
+                                            $bg_class = ($row_count % 2 == 0) ? 'style="background: #f8f9fa;"' : '';
                                         ?>
-                                        <tr>
-                                            <td>
+                                        <tr <?php echo $bg_class; ?>>
+                                            <td style="border-color: #e2e8f0;">
                                                 <strong><?php echo esc_html($institution['name']); ?></strong>
                                             </td>
-                                            <td class="text-end"><?php echo isset($institution['prices']['750']) ? hrgms_format_currency($institution['prices']['750'] / 100) : '-'; ?></td>
-                                            <td class="text-end"><?php echo isset($institution['prices']['835']) ? hrgms_format_currency($institution['prices']['835'] / 100) : '-'; ?></td>
-                                            <td class="text-end"><?php echo isset($institution['prices']['875']) ? hrgms_format_currency($institution['prices']['875'] / 100) : '-'; ?></td>
-                                            <td class="text-end"><?php echo isset($institution['prices']['916']) ? hrgms_format_currency($institution['prices']['916'] / 100) : '-'; ?></td>
-                                            <td class="text-end"><?php echo isset($institution['prices']['950']) ? hrgms_format_currency($institution['prices']['950'] / 100) : '-'; ?></td>
-                                            <td class="text-end"><strong><?php echo isset($institution['prices']['999']) ? hrgms_format_currency($institution['prices']['999'] / 100) : '-'; ?></strong></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><?php echo isset($institution['prices']['750']) ? hrgms_format_ar_rahnu_price($institution['prices']['750']) : '-'; ?></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><?php echo isset($institution['prices']['835']) ? hrgms_format_ar_rahnu_price($institution['prices']['835']) : '-'; ?></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><?php echo isset($institution['prices']['875']) ? hrgms_format_ar_rahnu_price($institution['prices']['875']) : '-'; ?></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><?php echo isset($institution['prices']['916']) ? hrgms_format_ar_rahnu_price($institution['prices']['916']) : '-'; ?></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><?php echo isset($institution['prices']['950']) ? hrgms_format_ar_rahnu_price($institution['prices']['950']) : '-'; ?></td>
+                                            <td class="text-end" style="border-color: #e2e8f0;"><strong style="color: #f39c12; font-size: 1.05rem;"><?php echo isset($institution['prices']['999']) ? hrgms_format_ar_rahnu_price($institution['prices']['999']) : '-'; ?></strong></td>
                                         </tr>
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
-                            <p class="text-muted small mt-2">
-                                <i class="bi bi-info-circle me-1"></i>Harga Ar-Rahnu adalah per 100 gram. Harga mungkin berbeza mengikut cawangan.
-                            </p>
+                            <div class="alert alert-warning mt-3" style="background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 8px;">
+                                <i class="bi bi-info-circle me-2"></i><strong>Nota:</strong> Harga Ar-Rahnu adalah per gram. Harga mungkin berbeza mengikut cawangan. 
+                                Sila hubungi institusi untuk maklumat terkini.
+                            </div>
                         </div>
                         <?php endif; ?>
 
                         <!-- SEO Content: Tips and Information -->
                         <div class="mb-4">
-                            <h3 class="h4 mb-3">Tips Membeli dan Menjual Emas di Malaysia</h3>
+                            <h3 class="h4 mb-4" style="color: var(--hrgms-primary);">
+                                <i class="bi bi-lightbulb me-2" style="color: #f39c12;"></i>Tips Membeli dan Menjual Emas di Malaysia
+                            </h3>
                             <div class="row g-4">
                                 <div class="col-md-6">
-                                    <div class="card h-100" style="border: 1px solid #e0e0e0;">
-                                        <div class="card-body">
-                                            <h5 class="card-title"><i class="bi bi-check-circle text-success me-2"></i>Tips Membeli Emas</h5>
-                                            <ul class="mb-0">
-                                                <li>Beli dari kedai emas berlesen dan dipercayai</li>
-                                                <li>Periksa sijil autentikasi emas</li>
-                                                <li>Bandingkan harga dari beberapa kedai</li>
-                                                <li>Fahami perbezaan harga beli dan jual</li>
-                                                <li>Simpan resit pembelian dengan selamat</li>
+                                    <div class="card h-100 shadow-sm" style="border: 2px solid #77ac68; border-radius: 12px; background: linear-gradient(135deg, #f0f9f0 0%, #ffffff 100%);">
+                                        <div class="card-body p-4">
+                                            <h5 class="card-title mb-3" style="color: #77ac68;">
+                                                <i class="bi bi-check-circle-fill me-2"></i>Tips Membeli Emas
+                                            </h5>
+                                            <ul class="mb-0" style="line-height: 2;">
+                                                <li><i class="bi bi-check2 text-success me-2"></i>Beli dari kedai emas berlesen dan dipercayai</li>
+                                                <li><i class="bi bi-check2 text-success me-2"></i>Periksa sijil autentikasi emas</li>
+                                                <li><i class="bi bi-check2 text-success me-2"></i>Bandingkan harga dari beberapa kedai</li>
+                                                <li><i class="bi bi-check2 text-success me-2"></i>Fahami perbezaan harga beli dan jual</li>
+                                                <li><i class="bi bi-check2 text-success me-2"></i>Simpan resit pembelian dengan selamat</li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="card h-100" style="border: 1px solid #e0e0e0;">
-                                        <div class="card-body">
-                                            <h5 class="card-title"><i class="bi bi-info-circle text-info me-2"></i>Faktor Mempengaruhi Harga</h5>
-                                            <ul class="mb-0">
-                                                <li>Harga emas antarabangsa (spot price)</li>
-                                                <li>Kadar tukaran USD/MYR</li>
-                                                <li>Permintaan dan penawaran tempatan</li>
-                                                <li>Kos pengeluaran dan overhead</li>
-                                                <li>Margin keuntungan kedai</li>
+                                    <div class="card h-100 shadow-sm" style="border: 2px solid #e67e22; border-radius: 12px; background: linear-gradient(135deg, #fff5e6 0%, #ffffff 100%);">
+                                        <div class="card-body p-4">
+                                            <h5 class="card-title mb-3" style="color: #e67e22;">
+                                                <i class="bi bi-info-circle-fill me-2"></i>Faktor Mempengaruhi Harga
+                                            </h5>
+                                            <ul class="mb-0" style="line-height: 2;">
+                                                <li><i class="bi bi-graph-up text-warning me-2"></i>Harga emas antarabangsa (spot price)</li>
+                                                <li><i class="bi bi-graph-up text-warning me-2"></i>Kadar tukaran USD/MYR</li>
+                                                <li><i class="bi bi-graph-up text-warning me-2"></i>Permintaan dan penawaran tempatan</li>
+                                                <li><i class="bi bi-graph-up text-warning me-2"></i>Kos pengeluaran dan overhead</li>
+                                                <li><i class="bi bi-graph-up text-warning me-2"></i>Margin keuntungan kedai</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -305,8 +325,8 @@ get_header();
                                     <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
                                             Harga emas 999 per gram di Malaysia hari ini adalah sekitar 
-                                            <?php echo $gold_prices ? hrgms_format_price_per_gram($gold_prices['prices']['MksBuy']) : 'RM 55-57'; ?> 
-                                            untuk belian dan <?php echo $gold_prices ? hrgms_format_price_per_gram($gold_prices['prices']['MksSell']) : 'RM 56-58'; ?> 
+                                            <?php echo $gold_prices ? hrgms_format_price_per_gram($gold_prices['prices']['MksBuy']) : 'RM 55.000-57.000'; ?> 
+                                            untuk belian dan <?php echo $gold_prices ? hrgms_format_price_per_gram($gold_prices['prices']['MksSell']) : 'RM 56.000-58.000'; ?> 
                                             untuk jualan. Harga ini berubah mengikut harga emas antarabangsa dan kadar tukaran mata wang.
                                         </div>
                                     </div>
@@ -357,14 +377,16 @@ get_header();
                         </div>
 
                         <!-- Call to Action -->
-                        <div class="alert alert-info mt-4">
-                            <h5 class="alert-heading"><i class="bi bi-lightbulb me-2"></i>Ingin Tahu Harga Emas Terkini?</h5>
-                            <p class="mb-2">
+                        <div class="alert mt-4" style="background: linear-gradient(135deg, #f9f3e3 0%, #fef9e7 100%); border: 2px solid #f39c12; border-radius: 12px; padding: 25px;">
+                            <h5 class="alert-heading mb-3" style="color: #e67e22;">
+                                <i class="bi bi-lightbulb-fill me-2" style="color: #f39c12;"></i>Ingin Tahu Harga Emas Terkini?
+                            </h5>
+                            <p class="mb-3" style="color: #2d3748;">
                                 Dapatkan maklumat terkini tentang harga emas Malaysia setiap hari. Harga dikemaskini secara berkala 
                                 untuk memastikan ketepatan maklumat.
                             </p>
-                            <a href="<?php echo esc_url(home_url('/harga-emas/')); ?>" class="btn btn-primary">
-                                Lihat Semua Rekod Harga Emas <i class="bi bi-arrow-right ms-1"></i>
+                            <a href="<?php echo esc_url(home_url('/harga-emas/')); ?>" class="btn" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
+                                <i class="bi bi-graph-up me-2"></i>Lihat Semua Rekod Harga Emas <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         </div>
 

@@ -957,13 +957,23 @@ function hrgms_format_currency($amount) {
 
 /**
  * hrgms_format_price_per_gram
- * What: Format price per gram from price per 100g
- * Input: float $price_100g - Price per 100g
- * Output: string - Formatted price per gram
+ * What: Format price per gram from price per kilogram (MksBuy/MksSell)
+ * Input: float $price_per_kg - Price per kilogram
+ * Output: string - Formatted price per gram with 3 decimal places
  */
-function hrgms_format_price_per_gram($price_100g) {
-    $per_gram = $price_100g / 100;
-    return hrgms_format_currency($per_gram);
+function hrgms_format_price_per_gram($price_per_kg) {
+    $per_gram = $price_per_kg / 1000; // Convert from per kg to per gram
+    return 'RM ' . number_format($per_gram, 3, '.', ','); // 3 decimal places
+}
+
+/**
+ * hrgms_format_ar_rahnu_price
+ * What: Format Ar-Rahnu price (already in per gram, no conversion needed)
+ * Input: float $price_per_gram - Price per gram from API
+ * Output: string - Formatted price per gram with 3 decimal places
+ */
+function hrgms_format_ar_rahnu_price($price_per_gram) {
+    return 'RM ' . number_format($price_per_gram, 3, '.', ','); // 3 decimal places, no conversion
 }
 
 /**
