@@ -835,6 +835,114 @@ function hrgms_harga_template_redirect() {
 add_action('template_redirect', 'hrgms_harga_template_redirect', 1);
 
 /**
+ * hrgms_kedai_emas_murah_template_redirect
+ * What: Load custom template for kedai-emas-murah page
+ * URL: /kedai-emas-murah/
+ */
+function hrgms_kedai_emas_murah_template_redirect() {
+    // Check if this is a page with slug 'kedai-emas-murah'
+    if (is_page('kedai-emas-murah')) {
+        $template_path = get_template_directory() . '/template-kedai-emas-murah.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+    
+    // Also check by request URI as fallback
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    if (strpos($request_uri, '/kedai-emas-murah') !== false && !is_admin()) {
+        $template_path = get_template_directory() . '/template-kedai-emas-murah.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'hrgms_kedai_emas_murah_template_redirect', 1);
+
+/**
+ * hrgms_ar_rahnu_template_redirect
+ * What: Load custom template for ar-rahnu page
+ * URL: /ar-rahnu/
+ */
+function hrgms_ar_rahnu_template_redirect() {
+    // Check if this is a page with slug 'ar-rahnu'
+    if (is_page('ar-rahnu')) {
+        $template_path = get_template_directory() . '/template-ar-rahnu.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+    
+    // Also check by request URI as fallback
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    if (strpos($request_uri, '/ar-rahnu') !== false && strpos($request_uri, '/ar-rahnu/calculator') === false && !is_admin()) {
+        $template_path = get_template_directory() . '/template-ar-rahnu.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'hrgms_ar_rahnu_template_redirect', 1);
+
+/**
+ * hrgms_jual_emas_template_redirect
+ * What: Load custom template for jual-emas page
+ * URL: /jual-emas/
+ */
+function hrgms_jual_emas_template_redirect() {
+    // Check if this is a page with slug 'jual-emas'
+    if (is_page('jual-emas')) {
+        $template_path = get_template_directory() . '/template-jual-emas.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+    
+    // Also check by request URI as fallback
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    if (strpos($request_uri, '/jual-emas') !== false && !is_admin()) {
+        $template_path = get_template_directory() . '/template-jual-emas.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'hrgms_jual_emas_template_redirect', 1);
+
+/**
+ * hrgms_surat_pajak_template_redirect
+ * What: Load custom template for surat-pajak page
+ * URL: /surat-pajak/
+ */
+function hrgms_surat_pajak_template_redirect() {
+    // Check if this is a page with slug 'surat-pajak'
+    if (is_page('surat-pajak')) {
+        $template_path = get_template_directory() . '/template-surat-pajak.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+    
+    // Also check by request URI as fallback
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    if (strpos($request_uri, '/surat-pajak') !== false && !is_admin()) {
+        $template_path = get_template_directory() . '/template-surat-pajak.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'hrgms_surat_pajak_template_redirect', 1);
+
+/**
  * hrgms_harga_emas_malaysia_seo_meta
  * What: Add SEO meta tags for harga-emas-malaysia page
  * Note: Now handled by hrgms_harga_seo_meta() for shared template
@@ -907,6 +1015,135 @@ function hrgms_harga_seo_meta() {
     <?php
 }
 add_action('wp_head', 'hrgms_harga_seo_meta', 5);
+
+/**
+ * hrgms_kedai_emas_murah_seo_meta
+ * What: Add SEO meta tags for kedai-emas-murah page
+ */
+function hrgms_kedai_emas_murah_seo_meta() {
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    
+    if (is_page('kedai-emas-murah') || strpos($request_uri, '/kedai-emas-murah') !== false) {
+        $current_year = date('Y');
+        $current_date = date('d F Y');
+        $title = "Kedai Emas Paling Murah di Malaysia $current_year - Senarai Kedai Emas Terbaik";
+        $description = "Senarai kedai emas murah di Malaysia. Temukan kedai emas terbaik di Pasar Siti Khadijah Kelantan, Jalan Masjid India KL, Lebuh Penang, dan lokasi lain. Bandingkan harga emas dan dapatkan tawaran terbaik.";
+        $keywords = "kedai emas murah, kedai emas murah malaysia, kedai emas kelantan, kedai emas kuala lumpur, kedai emas pulau pinang, harga emas murah, beli emas murah, kedai emas terbaik malaysia, $current_year";
+        $url = home_url('/kedai-emas-murah/');
+        
+        ?>
+        <meta name="description" content="<?php echo esc_attr($description); ?>">
+        <meta name="keywords" content="<?php echo esc_attr($keywords); ?>">
+        <meta property="og:title" content="<?php echo esc_attr($title); ?>">
+        <meta property="og:description" content="<?php echo esc_attr($description); ?>">
+        <meta property="og:url" content="<?php echo esc_url($url); ?>">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="<?php echo esc_attr($title); ?>">
+        <meta name="twitter:description" content="<?php echo esc_attr($description); ?>">
+        <?php
+    }
+}
+add_action('wp_head', 'hrgms_kedai_emas_murah_seo_meta', 5);
+
+/**
+ * hrgms_ar_rahnu_seo_meta
+ * What: Add SEO meta tags for ar-rahnu page
+ * Optimized for keywords: harga emas ar-rahnu, ar-rahnu xchange, ar-rahnu yapeim, ar-rahnu bank
+ */
+function hrgms_ar_rahnu_seo_meta() {
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    
+    // Skip if it's calculator page
+    if (strpos($request_uri, '/ar-rahnu/calculator') !== false) {
+        return;
+    }
+    
+    if (is_page('ar-rahnu') || strpos($request_uri, '/ar-rahnu') !== false) {
+        $current_year = date('Y');
+        $current_date = date('d F Y');
+        $title = "Harga Emas Ar-Rahnu Malaysia $current_year - Ar-Rahnu X'Change, YaPEIM, Bank Islam & Lain-lain";
+        $description = "Dapatkan harga emas Ar-Rahnu terkini dari semua bank dan institusi Ar-Rahnu di Malaysia. Bandingkan harga Ar-Rahnu Agrobank, Bank Islam, Bank Muamalat, X'Change, YaPEIM, CIMB Islamic, RHB Islamic, dan banyak lagi. Kira pinjaman Ar-Rahnu dengan kalkulator perbandingan.";
+        $keywords = "harga emas ar-rahnu, ar-rahnu malaysia, ar-rahnu xchange, ar-rahnu yapeim, ar-rahnu bank, ar-rahnu agrobank, ar-rahnu bank islam, ar-rahnu bank muamalat, ar-rahnu cimb islamic, ar-rahnu rhb islamic, harga ar-rahnu, pinjaman ar-rahnu, ar-rahnu calculator, $current_year";
+        $url = home_url('/ar-rahnu/');
+        
+        ?>
+        <meta name="description" content="<?php echo esc_attr($description); ?>">
+        <meta name="keywords" content="<?php echo esc_attr($keywords); ?>">
+        <meta property="og:title" content="<?php echo esc_attr($title); ?>">
+        <meta property="og:description" content="<?php echo esc_attr($description); ?>">
+        <meta property="og:url" content="<?php echo esc_url($url); ?>">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="<?php echo esc_attr($title); ?>">
+        <meta name="twitter:description" content="<?php echo esc_attr($description); ?>">
+        <?php
+    }
+}
+add_action('wp_head', 'hrgms_ar_rahnu_seo_meta', 5);
+
+/**
+ * hrgms_jual_emas_seo_meta
+ * What: Add SEO meta tags for jual-emas page
+ * Optimized for keywords: jual emas, beli emas, jual emas 916, harga emas 916 hari ini
+ */
+function hrgms_jual_emas_seo_meta() {
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    
+    if (is_page('jual-emas') || strpos($request_uri, '/jual-emas') !== false) {
+        $current_year = date('Y');
+        $current_date = date('d F Y');
+        $title = "Jual Beli Emas 916 Terpakai $current_year - Harga Terbaik di Malaysia";
+        $description = "Jual dan beli emas 916 terpakai dengan harga terbaik di Malaysia. Kami beli emas 916, 999, 835, 750 dengan harga kompetitif. Harga emas 916 hari ini, kedai emas pembeli emas, surat pajak. Hubungi kami untuk tawaran terbaik.";
+        $keywords = "jual emas, beli emas, jual emas 916, beli emas 916, jual emas terpakai, beli emas terpakai, harga emas 916 hari ini, kedai emas pembeli emas, surat pajak, jual emas malaysia, beli emas malaysia, $current_year";
+        $url = home_url('/jual-emas/');
+        
+        ?>
+        <meta name="description" content="<?php echo esc_attr($description); ?>">
+        <meta name="keywords" content="<?php echo esc_attr($keywords); ?>">
+        <meta property="og:title" content="<?php echo esc_attr($title); ?>">
+        <meta property="og:description" content="<?php echo esc_attr($description); ?>">
+        <meta property="og:url" content="<?php echo esc_url($url); ?>">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="<?php echo esc_attr($title); ?>">
+        <meta name="twitter:description" content="<?php echo esc_attr($description); ?>">
+        <?php
+    }
+}
+add_action('wp_head', 'hrgms_jual_emas_seo_meta', 5);
+
+/**
+ * hrgms_surat_pajak_seo_meta
+ * What: Add SEO meta tags for surat-pajak page
+ * Optimized for keywords: jual surat pajak, cara jual surat pajak, jual surat pajak gadai emas
+ * Main income page - highly optimized for SEO
+ */
+function hrgms_surat_pajak_seo_meta() {
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    
+    if (is_page('surat-pajak') || strpos($request_uri, '/surat-pajak') !== false) {
+        $current_year = date('Y');
+        $current_date = date('d F Y');
+        $title = "Jual Surat Pajak $current_year - Cara Jual Surat Pajak Gadai Emas & Ar-Rahnu";
+        $description = "Jual surat pajak gadai emas dan ar-rahnu dengan harga terbaik. Kami beli surat pajak yang tamat tempoh atau masih aktif. Perkhidmatan jual surat pajak di seluruh Malaysia. Hubungi kami untuk tawaran terbaik dan nasihat percuma.";
+        $keywords = "jual surat pajak, cara jual surat pajak, jual surat pajak gadai emas, jual surat pajak ar-rahnu, jual surat pajak tamat tempoh, beli surat pajak, jual surat pajak malaysia, surat pajak gadai emas, surat pajak ar-rahnu, perbezaan surat pajak, $current_year";
+        $url = home_url('/surat-pajak/');
+        
+        ?>
+        <meta name="description" content="<?php echo esc_attr($description); ?>">
+        <meta name="keywords" content="<?php echo esc_attr($keywords); ?>">
+        <meta property="og:title" content="<?php echo esc_attr($title); ?>">
+        <meta property="og:description" content="<?php echo esc_attr($description); ?>">
+        <meta property="og:url" content="<?php echo esc_url($url); ?>">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="<?php echo esc_attr($title); ?>">
+        <meta name="twitter:description" content="<?php echo esc_attr($description); ?>">
+        <?php
+    }
+}
+add_action('wp_head', 'hrgms_surat_pajak_seo_meta', 5);
 
 /**
  * hrgms_exclude_harga_emas_from_main_query
@@ -1111,6 +1348,115 @@ function hrgms_fetch_ar_rahnu_prices() {
     set_transient($cache_key, $data, $cache_time);
     
     return $data;
+}
+
+/**
+ * hrgms_fetch_stores
+ * What: Fetch stores data from API with caching (30 minutes TTL)
+ * Input: none
+ * Output: array|false - Stores data or false on error
+ * Side effects: Updates transient cache
+ * Errors: Returns false on network error or invalid JSON
+ */
+function hrgms_fetch_stores() {
+    $cache_key = 'hrgms_stores';
+    
+    // Get API config
+    $config = hrgms_get_api_config();
+    $cache_time = isset($config['cache_ttl']) ? $config['cache_ttl'] : 5 * MINUTE_IN_SECONDS;
+    // Use longer cache for stores (30 minutes)
+    $cache_time = 30 * MINUTE_IN_SECONDS;
+    
+    // Try to get from cache first
+    $cached = get_transient($cache_key);
+    if ($cached !== false) {
+        return $cached;
+    }
+    
+    // Fetch from API
+    $api_url = 'https://www.hargaemas.my/api/stores.json';
+    $response = wp_remote_get($api_url, array(
+        'timeout' => isset($config['api_timeout']) ? $config['api_timeout'] : 10,
+        'sslverify' => isset($config['ssl_verify']) ? $config['ssl_verify'] : true,
+    ));
+    
+    // Check for errors
+    if (is_wp_error($response)) {
+        error_log('HRGMS: Failed to fetch stores - ' . $response->get_error_message());
+        return false;
+    }
+    
+    $body = wp_remote_retrieve_body($response);
+    $data = json_decode($body, true);
+    
+    // Validate data
+    if (json_last_error() !== JSON_ERROR_NONE || !isset($data['stores'])) {
+        error_log('HRGMS: Invalid JSON response from stores API');
+        return false;
+    }
+    
+    // Cache the data
+    set_transient($cache_key, $data, $cache_time);
+    
+    return $data;
+}
+
+/**
+ * hrgms_get_random_stores_by_state
+ * What: Get random stores grouped by state (2-3 stores per state)
+ * Input: $stores_data (array from API), $max_stores (int, default 20)
+ * Output: array - Filtered and randomized stores grouped by state
+ * Side effects: none
+ */
+function hrgms_get_random_stores_by_state($stores_data, $max_stores = 20) {
+    if (!$stores_data || !isset($stores_data['stores']) || !is_array($stores_data['stores'])) {
+        return array();
+    }
+    
+    $stores = $stores_data['stores'];
+    $grouped_by_state = array();
+    
+    // Group stores by state (filter field)
+    foreach ($stores as $store) {
+        $state = isset($store['filter']) && !empty($store['filter']) ? $store['filter'] : 'Others';
+        if (!isset($grouped_by_state[$state])) {
+            $grouped_by_state[$state] = array();
+        }
+        $grouped_by_state[$state][] = $store;
+    }
+    
+    // Randomize stores per state (2-3 per state)
+    $selected_stores = array();
+    $stores_per_state = 2; // Start with 2 per state
+    $total_selected = 0;
+    
+    // Shuffle states for randomness
+    $states = array_keys($grouped_by_state);
+    shuffle($states);
+    
+    foreach ($states as $state) {
+        if ($total_selected >= $max_stores) {
+            break;
+        }
+        
+        $state_stores = $grouped_by_state[$state];
+        shuffle($state_stores); // Randomize within state
+        
+        // Take 2-3 stores per state
+        $take_count = min($stores_per_state, count($state_stores), $max_stores - $total_selected);
+        $selected_stores = array_merge($selected_stores, array_slice($state_stores, 0, $take_count));
+        $total_selected += $take_count;
+        
+        // Increase to 3 per state if we have room
+        if ($total_selected < $max_stores / 2) {
+            $stores_per_state = 3;
+        }
+    }
+    
+    // Final shuffle
+    shuffle($selected_stores);
+    
+    return $selected_stores;
 }
 
 /**
