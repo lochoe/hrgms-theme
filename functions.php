@@ -726,13 +726,14 @@ add_action('template_redirect', 'hrgms_harga_emas_template_redirect');
 
 /**
  * hrgms_harga_emas_malaysia_template_redirect
- * What: Load custom template for harga-emas-malaysia page
+ * What: Load shared template for harga-emas-malaysia page
  * URL: /harga-emas-malaysia/
+ * Note: Now uses template-harga.php (shared template)
  */
 function hrgms_harga_emas_malaysia_template_redirect() {
     // Check if this is a page with slug 'harga-emas-malaysia'
     if (is_page('harga-emas-malaysia')) {
-        $template_path = get_template_directory() . '/template-harga-emas-malaysia.php';
+        $template_path = get_template_directory() . '/template-harga.php';
         if (file_exists($template_path)) {
             include $template_path;
             exit;
@@ -742,7 +743,7 @@ function hrgms_harga_emas_malaysia_template_redirect() {
     // Also check by request URI as fallback
     $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     if (strpos($request_uri, '/harga-emas-malaysia') !== false && !is_admin()) {
-        $template_path = get_template_directory() . '/template-harga-emas-malaysia.php';
+        $template_path = get_template_directory() . '/template-harga.php';
         if (file_exists($template_path)) {
             include $template_path;
             exit;
@@ -752,28 +753,160 @@ function hrgms_harga_emas_malaysia_template_redirect() {
 add_action('template_redirect', 'hrgms_harga_emas_malaysia_template_redirect', 1);
 
 /**
+ * hrgms_harga_emas_terkini_template_redirect
+ * What: Load shared template for harga-emas-terkini-di-malaysia page
+ * URL: /harga-emas-terkini-di-malaysia/
+ * Note: Uses template-harga.php (shared template)
+ */
+function hrgms_harga_emas_terkini_template_redirect() {
+    // Check if this is a page with slug 'harga-emas-terkini-di-malaysia'
+    if (is_page('harga-emas-terkini-di-malaysia')) {
+        $template_path = get_template_directory() . '/template-harga.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+    
+    // Also check by request URI as fallback
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    if (strpos($request_uri, '/harga-emas-terkini-di-malaysia') !== false && !is_admin()) {
+        $template_path = get_template_directory() . '/template-harga.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'hrgms_harga_emas_terkini_template_redirect', 1);
+
+/**
+ * hrgms_calculator_emas_template_redirect
+ * What: Load custom template for calculator-emas page
+ * URL: /calculator-emas/
+ */
+function hrgms_calculator_emas_template_redirect() {
+    // Check if this is a page with slug 'calculator-emas'
+    if (is_page('calculator-emas')) {
+        $template_path = get_template_directory() . '/template-calculator-emas.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+    
+    // Also check by request URI as fallback
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    if (strpos($request_uri, '/calculator-emas') !== false && !is_admin()) {
+        $template_path = get_template_directory() . '/template-calculator-emas.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'hrgms_calculator_emas_template_redirect', 1);
+
+/**
+ * hrgms_harga_template_redirect
+ * What: Load custom template for harga page
+ * URL: /harga/
+ */
+function hrgms_harga_template_redirect() {
+    // Check if this is a page with slug 'harga'
+    if (is_page('harga')) {
+        $template_path = get_template_directory() . '/template-harga.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+    
+    // Also check by request URI as fallback
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    if (strpos($request_uri, '/harga') !== false && !is_admin() && strpos($request_uri, '/harga-emas') === false) {
+        $template_path = get_template_directory() . '/template-harga.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'hrgms_harga_template_redirect', 1);
+
+/**
  * hrgms_harga_emas_malaysia_seo_meta
  * What: Add SEO meta tags for harga-emas-malaysia page
+ * Note: Now handled by hrgms_harga_seo_meta() for shared template
  */
-function hrgms_harga_emas_malaysia_seo_meta() {
-    if (is_page('harga-emas-malaysia')) {
+
+/**
+ * hrgms_calculator_emas_seo_meta
+ * What: Add SEO meta tags for calculator-emas page
+ */
+function hrgms_calculator_emas_seo_meta() {
+    if (is_page('calculator-emas')) {
         $current_year = date('Y');
         $current_date = date('d F Y');
-        $description = "Dapatkan harga emas Malaysia terkini hari ini ($current_date). Harga emas 999, 916, 835, 750 per gram. Harga Ar-Rahnu dan maklumat lengkap harga emas di Malaysia.";
+        $description = "Kalkulator emas percuma untuk kira harga emas 999, 916, 835, 750 dan semua karat. Kira nilai tunai emas terpakai dengan susut nilai. Harga emas terkini hari ini ($current_date).";
         ?>
         <meta name="description" content="<?php echo esc_attr($description); ?>">
-        <meta name="keywords" content="harga emas malaysia, harga emas 999, harga emas hari ini, harga emas per gram, harga ar-rahnu, emas malaysia <?php echo $current_year; ?>">
-        <meta property="og:title" content="Harga Emas Malaysia <?php echo $current_year; ?> - Harga Terkini Hari Ini">
+        <meta name="keywords" content="kalkulator emas, kira harga emas, harga emas 999, harga emas 916, kalkulator emas malaysia, nilai emas terpakai, susut nilai emas, <?php echo $current_year; ?>">
+        <meta property="og:title" content="Kalkulator Emas - Kira Harga Emas Hari Ini <?php echo $current_year; ?>">
         <meta property="og:description" content="<?php echo esc_attr($description); ?>">
-        <meta property="og:url" content="<?php echo esc_url(home_url('/harga-emas-malaysia/')); ?>">
+        <meta property="og:url" content="<?php echo esc_url(home_url('/calculator-emas/')); ?>">
         <meta property="og:type" content="website">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Harga Emas Malaysia <?php echo $current_year; ?>">
+        <meta name="twitter:title" content="Kalkulator Emas Malaysia <?php echo $current_year; ?>">
         <meta name="twitter:description" content="<?php echo esc_attr($description); ?>">
         <?php
     }
 }
-add_action('wp_head', 'hrgms_harga_emas_malaysia_seo_meta', 5);
+add_action('wp_head', 'hrgms_calculator_emas_seo_meta', 5);
+
+/**
+ * hrgms_harga_seo_meta
+ * What: Add SEO meta tags for harga pages (shared template, different URLs)
+ * URLs: /harga/, /harga-emas-malaysia/, /harga-emas-terkini-di-malaysia/
+ */
+function hrgms_harga_seo_meta() {
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    $current_year = date('Y');
+    $current_date = date('d F Y');
+    
+    // Check which page we're on
+    if (is_page('harga-emas-terkini-di-malaysia') || strpos($request_uri, '/harga-emas-terkini-di-malaysia') !== false) {
+        $title = "Harga Emas Terkini di Malaysia - Harga Terkini Hari Ini $current_year";
+        $description = "Harga emas terkini di Malaysia hari ini ($current_date). Dapatkan harga emas 999, 916, 835, 750 dan semua karat emas. Harga spot raw material, harga retail persatuan peniaga emas, dan harga Ar-Rahnu.";
+        $keywords = "harga emas terkini di malaysia, harga emas hari ini, harga emas 999, harga emas 916, harga emas malaysia, harga spot emas, $current_year";
+        $url = home_url('/harga-emas-terkini-di-malaysia/');
+    } elseif (is_page('harga-emas-malaysia') || strpos($request_uri, '/harga-emas-malaysia') !== false) {
+        $title = "Harga Emas Malaysia $current_year - Harga Terkini Hari Ini";
+        $description = "Dapatkan harga emas Malaysia terkini hari ini ($current_date). Harga emas 999, 916, 835, 750 per gram. Harga Ar-Rahnu, harga emas Public Gold, dan maklumat lengkap harga emas di Malaysia.";
+        $keywords = "harga emas malaysia, harga emas 999, harga emas hari ini, harga emas per gram, harga ar-rahnu, emas malaysia, $current_year";
+        $url = home_url('/harga-emas-malaysia/');
+    } elseif (is_page('harga') || (strpos($request_uri, '/harga') !== false && strpos($request_uri, '/harga-emas') === false)) {
+        $title = "Harga Emas 916 999 Malaysia - Harga Terkini Hari Ini $current_year";
+        $description = "Harga emas 916, 999 dan semua karat emas Malaysia terkini hari ini ($current_date). Harga spot raw material emas, harga retail persatuan peniaga emas (Ar-Rahnu ID PAJAK), dan harga Ar-Rahnu.";
+        $keywords = "harga emas 916, harga emas 999, harga emas malaysia, harga emas hari ini, harga emas per gram, harga emas fgjam, harga arrahnu, harga emas bank, harga spot emas, $current_year";
+        $url = home_url('/harga/');
+    } else {
+        return; // Not a harga page
+    }
+    
+    ?>
+    <meta name="description" content="<?php echo esc_attr($description); ?>">
+    <meta name="keywords" content="<?php echo esc_attr($keywords); ?>">
+    <meta property="og:title" content="<?php echo esc_attr($title); ?>">
+    <meta property="og:description" content="<?php echo esc_attr($description); ?>">
+    <meta property="og:url" content="<?php echo esc_url($url); ?>">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo esc_attr($title); ?>">
+    <meta name="twitter:description" content="<?php echo esc_attr($description); ?>">
+    <?php
+}
+add_action('wp_head', 'hrgms_harga_seo_meta', 5);
 
 /**
  * hrgms_exclude_harga_emas_from_main_query
@@ -854,6 +987,35 @@ function hrgms_breadcrumb() {
    ========================================================================== */
 
 /**
+ * hrgms_get_api_config
+ * What: Load API configuration from config file
+ * Input: none
+ * Output: array - API configuration array
+ * Side effects: none
+ * Errors: Returns default config if file not found
+ */
+function hrgms_get_api_config() {
+    $config_file = get_template_directory() . '/hrgms-api-config.php';
+    
+    // Try to load config file
+    if (file_exists($config_file)) {
+        $config = require $config_file;
+        if (is_array($config)) {
+            return $config;
+        }
+    }
+    
+    // Fallback to default config (jika config file tidak wujud)
+    return array(
+        'gold_prices_url' => 'https://www.hargaemas.my/api/gold-prices.json',
+        'ar_rahnu_url' => 'https://www.hargaemas.my/api/ar-rahnu.json',
+        'cache_ttl' => 5 * MINUTE_IN_SECONDS,
+        'api_timeout' => 10,
+        'ssl_verify' => true,
+    );
+}
+
+/**
  * hrgms_fetch_gold_prices
  * What: Fetch gold prices from API with caching (5 minutes TTL)
  * Input: none
@@ -863,7 +1025,10 @@ function hrgms_breadcrumb() {
  */
 function hrgms_fetch_gold_prices() {
     $cache_key = 'hrgms_gold_prices';
-    $cache_time = 5 * MINUTE_IN_SECONDS; // 5 minutes cache
+    
+    // Get API config
+    $config = hrgms_get_api_config();
+    $cache_time = isset($config['cache_ttl']) ? $config['cache_ttl'] : 5 * MINUTE_IN_SECONDS;
     
     // Try to get from cache first
     $cached = get_transient($cache_key);
@@ -871,11 +1036,11 @@ function hrgms_fetch_gold_prices() {
         return $cached;
     }
     
-    // Fetch from API
-    $api_url = 'https://www.hargaemas.my/api/gold-prices.json';
+    // Fetch from API using config
+    $api_url = isset($config['gold_prices_url']) ? $config['gold_prices_url'] : 'https://www.hargaemas.my/api/gold-prices.json';
     $response = wp_remote_get($api_url, array(
-        'timeout' => 10,
-        'sslverify' => true,
+        'timeout' => isset($config['api_timeout']) ? $config['api_timeout'] : 10,
+        'sslverify' => isset($config['ssl_verify']) ? $config['ssl_verify'] : true,
     ));
     
     // Check for errors
@@ -909,7 +1074,10 @@ function hrgms_fetch_gold_prices() {
  */
 function hrgms_fetch_ar_rahnu_prices() {
     $cache_key = 'hrgms_ar_rahnu_prices';
-    $cache_time = 5 * MINUTE_IN_SECONDS; // 5 minutes cache
+    
+    // Get API config
+    $config = hrgms_get_api_config();
+    $cache_time = isset($config['cache_ttl']) ? $config['cache_ttl'] : 5 * MINUTE_IN_SECONDS;
     
     // Try to get from cache first
     $cached = get_transient($cache_key);
@@ -917,11 +1085,11 @@ function hrgms_fetch_ar_rahnu_prices() {
         return $cached;
     }
     
-    // Fetch from API
-    $api_url = 'https://www.hargaemas.my/api/ar-rahnu.json';
+    // Fetch from API using config
+    $api_url = isset($config['ar_rahnu_url']) ? $config['ar_rahnu_url'] : 'https://www.hargaemas.my/api/ar-rahnu.json';
     $response = wp_remote_get($api_url, array(
-        'timeout' => 10,
-        'sslverify' => true,
+        'timeout' => isset($config['api_timeout']) ? $config['api_timeout'] : 10,
+        'sslverify' => isset($config['ssl_verify']) ? $config['ssl_verify'] : true,
     ));
     
     // Check for errors

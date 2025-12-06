@@ -42,7 +42,7 @@ $pages_url = home_url('/halaman/');
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center hrgms-hero-content">
-                <h1 class="hrgms-hero-title"><?php echo esc_html($site_name); ?></h1>
+                <h1 class="hrgms-hero-title">Harga Emas Malaysia</h1>
                 <p class="hrgms-hero-subtitle">
                     <?php echo esc_html($site_description); ?>
                 </p>
