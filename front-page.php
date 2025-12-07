@@ -177,6 +177,25 @@ function hrgms_format_price($price, $decimals = 2) {
 </section>
 
 <!-- ========== HARGA EMAS SECTION (DI ATAS SEKALI) ========== -->
+<?php
+// Get Harga Emas category settings
+$harga_emas_cat_id = hrgms_get_harga_emas_cat_id();
+$harga_emas_show_front = get_theme_mod('hrgms_harga_emas_show_front', true);
+$harga_emas_front_count = absint(get_theme_mod('hrgms_harga_emas_front_count', 6));
+$harga_emas_category = get_category($harga_emas_cat_id);
+
+// Count posts excluding Harga Emas
+$total_posts = wp_count_posts()->publish;
+$harga_emas_count = $harga_emas_category ? $harga_emas_category->count : 0;
+$regular_posts_count = $total_posts - $harga_emas_count;
+
+// Get total pages and categories for other sections
+$total_pages = wp_count_posts('page')->publish;
+$total_categories = wp_count_terms('category');
+if (is_wp_error($total_categories)) {
+    $total_categories = 0;
+}
+?>
 <?php if ($harga_emas_show_front && $harga_emas_category) : ?>
 <section id="harga-emas" class="hrgms-products" style="background: linear-gradient(135deg, #f9f3e3 0%, #fef9e7 100%);">
     <div class="container">
