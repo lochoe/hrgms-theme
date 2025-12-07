@@ -1254,11 +1254,12 @@ function hrgms_get_api_config() {
 
 /**
  * hrgms_fetch_gold_prices
- * What: Fetch gold prices from API with caching (5 minutes TTL)
+ * What: Fetch gold prices from API with caching (10 minutes TTL)
  * Input: none
  * Output: array|false - Gold prices data or false on error
  * Side effects: Updates transient cache
  * Errors: Returns false on network error or invalid JSON
+ * Notes: Harga update setiap 10 minit dari API
  */
 function hrgms_fetch_gold_prices() {
     $cache_key = 'hrgms_gold_prices';

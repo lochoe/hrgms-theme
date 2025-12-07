@@ -347,31 +347,105 @@ a:hover {
 }
 
 /* ==========================================================================
-   Stats Section
+   Stats Section (Harga Emas Terkini)
    ========================================================================== */
 .hrgms-stats {
     padding: 40px 0;
-    background: var(--hrgms-light);
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
+    background: var(--hrgms-body-bg);
 }
 
-.stat-item {
+.hrgms-stats .stat-item {
     text-align: center;
-    padding: 20px;
+    padding: 25px 20px;
+    background: var(--hrgms-card-bg);
+    border: 1px solid var(--hrgms-card-border);
+    border-radius: 12px;
+    box-shadow: var(--hrgms-card-shadow);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--hrgms-primary);
-    margin-bottom: 5px;
+.hrgms-stats .stat-item:hover {
+    box-shadow: var(--hrgms-shadow-lg);
+    transform: translateY(-2px);
 }
 
-.stat-label {
-    font-size: 0.95rem;
-    color: var(--hrgms-gray);
+/* Stat Icon dengan colored background */
+.hrgms-stats .stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+/* Color coding untuk setiap stat type - Icon backgrounds */
+.hrgms-stats .stat-item.stat-mks .stat-icon {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.hrgms-stats .stat-item.stat-tael .stat-icon {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.hrgms-stats .stat-item.stat-silver .stat-icon {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.hrgms-stats .stat-item.stat-usd .stat-icon {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+/* Stat Label - di atas */
+.hrgms-stats .stat-label {
+    font-size: 0.875rem;
+    color: #9ca3af;
     font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* Stat Number - di bawah */
+.hrgms-stats .stat-number {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--hrgms-card-text);
+    line-height: 1.2;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .hrgms-stats .stat-number {
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .hrgms-stats .stat-number {
+        font-size: 2.25rem;
+    }
+}
+
+/* Last update text */
+.hrgms-stats .text-muted {
+    font-size: 0.875rem;
+    color: var(--hrgms-gray);
+    margin-top: 20px;
+}
+
+.hrgms-stats .text-muted i {
+    color: var(--hrgms-primary);
 }
 
 /* ==========================================================================

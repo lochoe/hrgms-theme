@@ -47,7 +47,7 @@ $pages_url = home_url('/halaman/');
                     <?php echo esc_html($site_description); ?>
                 </p>
                 <div class="hero-buttons">
-                    <a href="https://www.hargaemas.my/ar-rahnu/calculator?selected=ARX" class="btn btn-hrgms-primary">
+                    <a href="<?php echo esc_url(home_url('/calculator-emas/')); ?>" class="btn btn-hrgms-primary">
                         <i class="bi bi-calculator me-2"></i>Kalkulator
                     </a>
                     <a href="https://www.hargaemas.my/gold-bars-999" class="btn btn-hrgms-secondary">
@@ -59,54 +59,120 @@ $pages_url = home_url('/halaman/');
     </div>
 </section>
 
-<!-- ========== STATS SECTION ========== -->
+<!-- ========== STATS SECTION (Harga Emas Terkini) ========== -->
 <?php
-// Get Harga Emas category settings
-$harga_emas_cat_id = hrgms_get_harga_emas_cat_id();
-$harga_emas_show_front = get_theme_mod('hrgms_harga_emas_show_front', true);
-$harga_emas_front_count = absint(get_theme_mod('hrgms_harga_emas_front_count', 6));
-$harga_emas_category = get_category($harga_emas_cat_id);
+// Fetch gold prices from API
+$gold_prices = hrgms_fetch_gold_prices();
+$prices = $gold_prices && isset($gold_prices['prices']) ? $gold_prices['prices'] : null;
 
-// Count posts excluding Harga Emas
-$total_posts = wp_count_posts()->publish;
-$harga_emas_count = $harga_emas_category ? $harga_emas_category->count : 0;
-$regular_posts_count = $total_posts - $harga_emas_count;
+// Format currency helper
+function hrgms_format_price($price, $decimals = 2) {
+    return number_format($price, $decimals, '.', ',');
+}
 ?>
 <section class="hrgms-stats">
     <div class="container">
-        <div class="row">
-            <?php
-            $total_pages = wp_count_posts('page')->publish;
-            $total_categories = wp_count_terms('category');
-            if (is_wp_error($total_categories)) {
-                $total_categories = 0;
-            }
-            ?>
+        <?php if ($prices) : ?>
+        <div class="row g-3">
+            <!-- MKS Sell (per gram) -->
             <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number"><?php echo number_format($harga_emas_count); ?>+</div>
-                    <div class="stat-label">Rekod Harga Emas</div>
+                <div class="stat-item stat-mks">
+                    <div class="stat-icon">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div class="stat-label">MKS Jual (per gram)</div>
+                    <div class="stat-number">RM <?php echo hrgms_format_price($prices['MksSell'] / 1000, 2); ?></div>
                 </div>
             </div>
+            <!-- MKS Buy (per gram) -->
             <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number"><?php echo number_format($regular_posts_count); ?>+</div>
-                    <div class="stat-label">Artikel</div>
+                <div class="stat-item stat-mks">
+                    <div class="stat-icon">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div class="stat-label">MKS Beli (per gram)</div>
+                    <div class="stat-number">RM <?php echo hrgms_format_price($prices['MksBuy'] / 1000, 2); ?></div>
                 </div>
             </div>
+            <!-- Tael Sell -->
             <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number"><?php echo number_format($total_pages); ?>+</div>
-                    <div class="stat-label">Halaman</div>
+                <div class="stat-item stat-tael">
+                    <div class="stat-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <div class="stat-label">Tael Jual</div>
+                    <div class="stat-number"><?php echo number_format($prices['TaelSell'], 0, '.', ','); ?></div>
                 </div>
             </div>
+            <!-- Tael Buy -->
             <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Maklumat Terkini</div>
+                <div class="stat-item stat-tael">
+                    <div class="stat-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <div class="stat-label">Tael Beli</div>
+                    <div class="stat-number"><?php echo number_format($prices['TaelBuy'], 0, '.', ','); ?></div>
+                </div>
+            </div>
+            <!-- Silver Sell -->
+            <div class="col-6 col-md-3">
+                <div class="stat-item stat-silver">
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+                    <div class="stat-label">Silver Jual</div>
+                    <div class="stat-number">RM <?php echo hrgms_format_price($prices['SilverSell'], 2); ?></div>
+                </div>
+            </div>
+            <!-- Silver Buy -->
+            <div class="col-6 col-md-3">
+                <div class="stat-item stat-silver">
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+                    <div class="stat-label">Silver Beli</div>
+                    <div class="stat-number">RM <?php echo hrgms_format_price($prices['SilverBuy'], 2); ?></div>
+                </div>
+            </div>
+            <!-- USD/MYR Sell -->
+            <div class="col-6 col-md-3">
+                <div class="stat-item stat-usd">
+                    <div class="stat-icon">
+                        <i class="bi bi-bank"></i>
+                    </div>
+                    <div class="stat-label">USD/MYR Jual</div>
+                    <div class="stat-number"><?php echo hrgms_format_price($prices['UsdMyrSell'], 4); ?></div>
+                </div>
+            </div>
+            <!-- USD/MYR Buy -->
+            <div class="col-6 col-md-3">
+                <div class="stat-item stat-usd">
+                    <div class="stat-icon">
+                        <i class="bi bi-bank"></i>
+                    </div>
+                    <div class="stat-label">USD/MYR Beli</div>
+                    <div class="stat-number"><?php echo hrgms_format_price($prices['UsdMyrBuy'], 4); ?></div>
                 </div>
             </div>
         </div>
+        <?php if (isset($gold_prices['lastUpdate'])) : ?>
+        <div class="row mt-3">
+            <div class="col-12 text-center">
+                <small class="text-muted">
+                    <i class="bi bi-clock me-1"></i>
+                    Kemaskini: <?php echo date('d/m/Y H:i', strtotime($gold_prices['lastUpdate'])); ?>
+                </small>
+            </div>
+        </div>
+        <?php endif; ?>
+        <?php else : ?>
+        <!-- Fallback jika API error -->
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="text-muted">Memuatkan harga emas terkini...</p>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 
@@ -178,6 +244,81 @@ $regular_posts_count = $total_posts - $harga_emas_count;
     </div>
 </section>
 <?php endif; ?>
+
+<!-- ========== HALAMAN PILIHAN ========== -->
+<section class="hrgms-products" style="background: var(--hrgms-body-bg);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Halaman Pilihan</h2>
+            <a href="<?php echo esc_url($pages_url); ?>" class="view-all-link">
+                Lihat Semua (<?php echo $total_pages; ?>) <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        
+        <div class="row g-4">
+            <?php
+            $front_page_id = get_option('page_on_front');
+            $featured_pages = new WP_Query(array(
+                'post_type'      => 'page',
+                'posts_per_page' => 6,
+                'post_status'    => 'publish',
+                'post__not_in'   => $front_page_id ? array($front_page_id) : array(),
+                'orderby'        => 'menu_order',
+                'order'          => 'ASC',
+            ));
+
+            if ($featured_pages->have_posts()) :
+                while ($featured_pages->have_posts()) : $featured_pages->the_post();
+            ?>
+                <?php 
+                    // Get first image or featured image for page
+                    $page_thumb = hrgms_get_first_image(get_the_ID());
+                ?>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <article class="product-card">
+                        <div class="product-image">
+                            <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
+                                <?php if ($page_thumb) : ?>
+                                    <img src="<?php echo esc_url($page_thumb); ?>" 
+                                         alt="<?php the_title_attribute(); ?>" 
+                                         class="img-fluid"
+                                         loading="lazy">
+                                <?php else : ?>
+                                    <img src="<?php echo hrgms_get_placeholder_image(get_the_title(), 'e95420', 'ffffff', 300, 200); ?>" 
+                                         alt="<?php the_title_attribute(); ?>" 
+                                         class="img-fluid"
+                                         loading="lazy"
+                                         onerror="this.src='<?php echo hrgms_get_placeholder_image('Image', 'e95420', 'ffffff', 300, 200); ?>';">
+                                <?php endif; ?>
+                            </a>
+                        </div>
+                        <div class="product-body">
+                            <h3 class="product-title">
+                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            </h3>
+                            <div class="product-meta">
+                                <?php echo wp_trim_words(get_the_excerpt(), 8, '...'); ?>
+                            </div>
+                            <a href="<?php the_permalink(); ?>" class="btn btn-product">
+                                Lihat
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            <?php
+                endwhile;
+                wp_reset_postdata();
+            else :
+            ?>
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <p>Tiada halaman dijumpai.</p>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
 
 <!-- ========== ARTIKEL TERKINI (EXCLUDE HARGA EMAS) ========== -->
 <section id="artikel" class="hrgms-products">
@@ -254,81 +395,6 @@ $regular_posts_count = $total_posts - $harga_emas_count;
                 <div class="col-12">
                     <div class="alert alert-info">
                         <p>Tiada artikel dijumpai. <a href="<?php echo admin_url('post-new.php'); ?>">Tambah artikel pertama anda</a>.</p>
-                    </div>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-</section>
-
-<!-- ========== HALAMAN PILIHAN ========== -->
-<section class="hrgms-products" style="background: var(--hrgms-body-bg);">
-    <div class="container">
-        <div class="section-header">
-            <h2>Halaman Pilihan</h2>
-            <a href="<?php echo esc_url($pages_url); ?>" class="view-all-link">
-                Lihat Semua (<?php echo $total_pages; ?>) <i class="bi bi-arrow-right"></i>
-            </a>
-        </div>
-        
-        <div class="row g-4">
-            <?php
-            $front_page_id = get_option('page_on_front');
-            $featured_pages = new WP_Query(array(
-                'post_type'      => 'page',
-                'posts_per_page' => 6,
-                'post_status'    => 'publish',
-                'post__not_in'   => $front_page_id ? array($front_page_id) : array(),
-                'orderby'        => 'menu_order',
-                'order'          => 'ASC',
-            ));
-
-            if ($featured_pages->have_posts()) :
-                while ($featured_pages->have_posts()) : $featured_pages->the_post();
-            ?>
-                <?php 
-                    // Get first image or featured image for page
-                    $page_thumb = hrgms_get_first_image(get_the_ID());
-                ?>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <article class="product-card">
-                        <div class="product-image">
-                            <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
-                                <?php if ($page_thumb) : ?>
-                                    <img src="<?php echo esc_url($page_thumb); ?>" 
-                                         alt="<?php the_title_attribute(); ?>" 
-                                         class="img-fluid"
-                                         loading="lazy">
-                                <?php else : ?>
-                                    <img src="<?php echo hrgms_get_placeholder_image(get_the_title(), 'e95420', 'ffffff', 300, 200); ?>" 
-                                         alt="<?php the_title_attribute(); ?>" 
-                                         class="img-fluid"
-                                         loading="lazy"
-                                         onerror="this.src='<?php echo hrgms_get_placeholder_image('Image', 'e95420', 'ffffff', 300, 200); ?>';">
-                                <?php endif; ?>
-                            </a>
-                        </div>
-                        <div class="product-body">
-                            <h3 class="product-title">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                            </h3>
-                            <div class="product-meta">
-                                <?php echo wp_trim_words(get_the_excerpt(), 8, '...'); ?>
-                            </div>
-                            <a href="<?php the_permalink(); ?>" class="btn btn-product">
-                                Lihat
-                            </a>
-                        </div>
-                    </article>
-                </div>
-            <?php
-                endwhile;
-                wp_reset_postdata();
-            else :
-            ?>
-                <div class="col-12">
-                    <div class="alert alert-info">
-                        <p>Tiada halaman dijumpai.</p>
                     </div>
                 </div>
             <?php endif; ?>
