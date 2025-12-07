@@ -15,3 +15,6 @@ node_modules/
 # API Configuration (RAHSIA - jangan commit!)
 hrgms-api-config.php
 
+# Local Development Documentation (ada password database!)
+LOCAL-DEVELOPMENT.md
+
