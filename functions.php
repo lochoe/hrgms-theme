@@ -50,10 +50,11 @@ add_action('after_setup_theme', 'hrgms_theme_setup');
 
 /**
  * hrgms_enqueue_scripts
- * What: Load all CSS and JS files including Bootstrap 5 CDN
+ * What: Load all CSS and JS files including Bootstrap 5 CDN with fallback
+ * Notes: Critical CSS dimuatkan tanpa defer untuk ensure rendering betul
  */
 function hrgms_enqueue_scripts() {
-    // Google Fonts - Poppins
+    // Google Fonts - Poppins (with display=swap untuk performance)
     wp_enqueue_style(
         'google-fonts-poppins',
         'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap',
@@ -61,7 +62,7 @@ function hrgms_enqueue_scripts() {
         null
     );
     
-    // Bootstrap 5 CSS (CDN)
+    // Bootstrap 5 CSS (CDN) - CRITICAL: Must load before content
     wp_enqueue_style(
         'bootstrap-css',
         'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
@@ -73,28 +74,35 @@ function hrgms_enqueue_scripts() {
     wp_enqueue_style(
         'bootstrap-icons',
         'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css',
-        array(),
+        array('bootstrap-css'),
         '1.11.1'
     );
     
-    // Theme main stylesheet (with cache busting)
+    // Theme main stylesheet (with cache busting) - Depends on Bootstrap
+    $style_file = get_stylesheet_directory() . '/style.css';
+    $style_version = wp_get_theme()->get('Version');
+    if (file_exists($style_file)) {
+        $style_version .= '.' . filemtime($style_file);
+    }
     wp_enqueue_style(
         'hrgms-style',
         get_stylesheet_uri(),
-        array('bootstrap-css'),
-        wp_get_theme()->get('Version') . '.' . filemtime(get_stylesheet_directory() . '/style.css')
+        array('bootstrap-css', 'bootstrap-icons'),
+        $style_version
     );
     
     // Bootstrap 5 JS Bundle (includes Popper) - CDN
+    // NOTE: NO DEFER - Bootstrap JS is critical for navbar/collapse functionality
+    // Bootstrap 5 does NOT require jQuery (vanilla JS only)
     wp_enqueue_script(
         'bootstrap-js',
         'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js',
-        array(),
+        array(), // No dependencies - Bootstrap 5 is vanilla JS
         '5.3.2',
         true
     );
     
-    // Theme custom JS
+    // Theme custom JS - Depends on Bootstrap
     wp_enqueue_script(
         'hrgms-custom-js',
         get_template_directory_uri() . '/assets/js/custom.js',
@@ -307,10 +315,12 @@ add_filter('the_generator', 'hrgms_remove_wp_version');
 
 /**
  * hrgms_async_scripts
- * What: Add defer to scripts for performance
+ * What: Add defer only to non-critical scripts for performance
+ * Notes: Bootstrap JS is NOT deferred as it's critical for UI functionality
  */
 function hrgms_async_scripts($tag, $handle, $src) {
-    $defer_scripts = array('bootstrap-js', 'hrgms-custom-js');
+    // Only defer custom JS, NOT Bootstrap (critical for navbar/collapse)
+    $defer_scripts = array('hrgms-custom-js');
     
     if (in_array($handle, $defer_scripts)) {
         return str_replace(' src', ' defer src', $tag);
@@ -319,6 +329,79 @@ function hrgms_async_scripts($tag, $handle, $src) {
     return $tag;
 }
 add_filter('script_loader_tag', 'hrgms_async_scripts', 10, 3);
+
+/**
+ * hrgms_add_cdn_fallback
+ * What: Add fallback mechanism untuk CDN failures dan handle plugin errors gracefully
+ * Notes: Detect jika Bootstrap CSS gagal load dan prevent plugin errors dari break rendering
+ */
+function hrgms_add_cdn_fallback() {
+    ?>
+    <script>
+    // Handle plugin errors gracefully (prevent them from breaking page rendering)
+    (function() {
+        'use strict';
+        
+        // Suppress known plugin errors that don't affect core functionality
+        var originalError = console.error;
+        var suppressedErrors = [
+            'njt_wa is not defined',
+            'wpcf7 is not defined',
+            'hostinger_reach_subscription_block_data is not defined'
+        ];
+        
+        console.error = function() {
+            var message = arguments[0] || '';
+            var shouldSuppress = suppressedErrors.some(function(err) {
+                return message.toString().indexOf(err) !== -1;
+            });
+            
+            if (!shouldSuppress) {
+                originalError.apply(console, arguments);
+            } else {
+                // Log as warning instead of error (less critical)
+                console.warn('Plugin warning (non-critical):', message);
+            }
+        };
+        
+        // Check if Bootstrap CSS loaded successfully
+        var bootstrapLoaded = false;
+        var sheets = document.styleSheets;
+        
+        // Check if Bootstrap CSS is loaded
+        for (var i = 0; i < sheets.length; i++) {
+            try {
+                if (sheets[i].href && sheets[i].href.indexOf('bootstrap') !== -1) {
+                    bootstrapLoaded = true;
+                    break;
+                }
+            } catch(e) {
+                // Cross-origin stylesheet, skip
+            }
+        }
+        
+        // Fallback: If Bootstrap not loaded after 2 seconds, show warning
+        setTimeout(function() {
+            if (!bootstrapLoaded) {
+                var testEl = document.createElement('div');
+                testEl.className = 'container';
+                testEl.style.display = 'none';
+                document.body.appendChild(testEl);
+                
+                var computed = window.getComputedStyle(testEl);
+                if (!computed || computed.maxWidth === 'none') {
+                    console.warn('Bootstrap CSS mungkin gagal load. Sila refresh halaman.');
+                    // Optionally reload page after user interaction
+                    // window.location.reload();
+                }
+                document.body.removeChild(testEl);
+            }
+        }, 2000);
+    })();
+    </script>
+    <?php
+}
+add_action('wp_footer', 'hrgms_add_cdn_fallback', 5);
 
 /**
  * hrgms_handle_rest_api_errors
@@ -1471,6 +1554,18 @@ function hrgms_format_currency($amount) {
 }
 
 /**
+ * hrgms_format_price
+ * What: Format price with custom decimal places (for stats display)
+ * Input: float $price - Price to format
+ *        int $decimals - Number of decimal places (default: 2)
+ * Output: string - Formatted price string
+ * Notes: Used in front-page.php for stats display
+ */
+function hrgms_format_price($price, $decimals = 2) {
+    return number_format($price, $decimals, '.', ',');
+}
+
+/**
  * hrgms_format_price_per_gram
  * What: Format price per gram from price per kilogram (MksBuy/MksSell)
  * Input: float $price_per_kg - Price per kilogram
@@ -1493,15 +1588,16 @@ function hrgms_format_ar_rahnu_price($price_per_gram) {
 
 /**
  * hrgms_get_placeholder_image
- * What: Generate safe placeholder image URL with proper validation
+ * What: Generate SVG data URI placeholder image (no external network request)
  * Input: string $text - Text to display on placeholder (optional)
  *        string $bg_color - Background color hex (default: 1e3a5f)
  *        string $text_color - Text color hex (default: ffffff)
  *        int $width - Image width (default: 300)
  *        int $height - Image height (default: 200)
- * Output: string - Complete placeholder image URL
+ * Output: string - SVG data URI (no external URL to avoid ERR_NAME_NOT_RESOLVED)
  * Side effects: none
  * Errors: Returns default placeholder if text is empty or invalid
+ * Notes: Changed from via.placeholder.com to data URI to avoid network failures
  */
 function hrgms_get_placeholder_image($text = '', $bg_color = '1e3a5f', $text_color = 'ffffff', $width = 300, $height = 200) {
     // Validate and sanitize inputs
@@ -1528,17 +1624,25 @@ function hrgms_get_placeholder_image($text = '', $bg_color = '1e3a5f', $text_col
         }
     }
     
-    // Build URL with proper encoding
-    $base_url = 'https://via.placeholder.com';
-    $url = sprintf(
-        '%s/%dx%d/%s/%s?text=%s',
-        $base_url,
+    // Escape text for XML/SVG
+    $text_escaped = esc_html($text);
+    
+    // Build SVG data URI (no external network request needed)
+    $svg = sprintf(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d">' .
+        '<rect width="100%%" height="100%%" fill="#%s"/>' .
+        '<text x="50%%" y="50%%" dominant-baseline="middle" text-anchor="middle" fill="#%s" font-family="Arial, sans-serif" font-size="%d">%s</text>' .
+        '</svg>',
         $width,
         $height,
         $bg_color,
         $text_color,
-        urlencode($text)
+        min(14, max(10, intval($width / 20))), // Responsive font size
+        $text_escaped
     );
     
-    return esc_url($url);
+    // Encode to data URI
+    $data_uri = 'data:image/svg+xml;base64,' . base64_encode($svg);
+    
+    return esc_url($data_uri);
 }

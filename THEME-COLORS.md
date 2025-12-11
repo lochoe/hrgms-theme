@@ -80,3 +80,4 @@ Untuk update colors, edit CSS variables dalam `style.css` di section `:root`. Se
 **Last Updated**: December 2024  
 **File Location**: `/wp-content/themes/hrgms-theme/THEME-COLORS.md`
 
+

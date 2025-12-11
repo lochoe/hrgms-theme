@@ -133,10 +133,11 @@
 
     /**
      * Handle image load errors
-     * What: Replace broken images with placeholder
+     * What: Replace broken images with SVG data URI placeholder (no network request)
      * Input: none
      * Output: void
      * Side effects: Adds error handlers to images
+     * Notes: Uses SVG data URI instead of external placeholder service to avoid ERR_NAME_NOT_RESOLVED
      */
     function initImageErrorHandling() {
         const images = document.querySelectorAll('img');
@@ -144,13 +145,23 @@
             if (!img.hasAttribute('data-error-handled')) {
                 img.setAttribute('data-error-handled', 'true');
                 img.addEventListener('error', function() {
-                    // Only replace if no onerror handler already set
-                    if (!this.onerror || this.onerror.toString().indexOf('placeholder') === -1) {
-                        const width = this.width || 300;
-                        const height = this.height || 200;
-                        const placeholderUrl = 'https://via.placeholder.com/' + width + 'x' + height + '/1e3a5f/ffffff?text=Image';
-                        if (this.src !== placeholderUrl) {
-                            this.src = placeholderUrl;
+                    // Only replace if not already a data URI
+                    if (this.src && this.src.indexOf('data:image') === -1) {
+                        const width = this.width || this.getAttribute('width') || 300;
+                        const height = this.height || this.getAttribute('height') || 200;
+                        
+                        // Create SVG data URI placeholder (no network request needed)
+                        const svgPlaceholder = 'data:image/svg+xml;base64,' + btoa(
+                            '<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '">' +
+                            '<rect width="100%" height="100%" fill="#1e3a5f"/>' +
+                            '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">Image</text>' +
+                            '</svg>'
+                        );
+                        
+                        // Prevent infinite loop
+                        if (this.src !== svgPlaceholder) {
+                            this.src = svgPlaceholder;
+                            this.alt = this.alt || 'Placeholder image';
                         }
                     }
                 });

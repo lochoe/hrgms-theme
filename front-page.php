@@ -64,11 +64,6 @@ $pages_url = home_url('/halaman/');
 // Fetch gold prices from API
 $gold_prices = hrgms_fetch_gold_prices();
 $prices = $gold_prices && isset($gold_prices['prices']) ? $gold_prices['prices'] : null;
-
-// Format currency helper
-function hrgms_format_price($price, $decimals = 2) {
-    return number_format($price, $decimals, '.', ',');
-}
 ?>
 <section class="hrgms-stats">
     <div class="container">

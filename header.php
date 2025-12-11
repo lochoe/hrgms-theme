@@ -25,7 +25,46 @@ if (!defined('ABSPATH')) {
     <meta name="msapplication-navbutton-color" content="#e95420">
     <meta name="apple-mobile-web-app-status-bar-style" content="#e95420">
     
+    <!-- Critical CSS Loading Check -->
+    <script>
+    // Ensure CSS loads before content renders
+    (function() {
+        'use strict';
+        var criticalStylesLoaded = false;
+        var checkInterval = setInterval(function() {
+            var testEl = document.createElement('div');
+            testEl.className = 'container';
+            testEl.style.display = 'none';
+            document.body.appendChild(testEl);
+            var computed = window.getComputedStyle(testEl);
+            if (computed && computed.maxWidth !== 'none') {
+                criticalStylesLoaded = true;
+                clearInterval(checkInterval);
+            }
+            document.body.removeChild(testEl);
+        }, 100);
+        
+        // Timeout after 5 seconds
+        setTimeout(function() {
+            clearInterval(checkInterval);
+            if (!criticalStylesLoaded) {
+                console.warn('CSS mungkin belum dimuatkan sepenuhnya. Sila refresh halaman.');
+            }
+        }, 5000);
+    })();
+    </script>
+    
     <?php wp_head(); ?>
+    
+    <!-- Noscript fallback untuk CSS -->
+    <noscript>
+        <style>
+        /* Basic fallback styles jika JavaScript disabled */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+        .navbar { background: #fff; padding: 1rem 0; }
+        </style>
+    </noscript>
 </head>
 
 <body <?php body_class(); ?>>
